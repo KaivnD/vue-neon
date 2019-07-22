@@ -93,8 +93,27 @@ export default {
   },
   mounted () {
     this.updateConnection()
+    document.addEventListener('keydown', this.bindKey)
   },
   methods: {
+    bindKey (e) {
+      console.log(e)
+      if (e.ctrlKey && e.keyCode === 83) {
+        // Ctrl + S 保存功能
+        this.$emit('ctrl-s')
+      } else if (e.keyCode === 46) {
+
+      } else if (e.keyCode === 27) {
+        if (this.isDragging === 'Node') {
+          this.ghostWrie = null
+          this.isDrag = ''
+        }
+      } else if (e.keyCode === 192) {
+        this.$emit('backquote')
+      } else if (e.keyCode === 116) {
+        this.$emit('f5')
+      }
+    },
     onEditorCtxMenu (e) {
       e.stopPropagation()
       if (e.button === 2) {
@@ -174,6 +193,7 @@ export default {
       this.dragCompPos = null
       this.dragCompOffset = null
       this.ghostWrie = null
+      this.$emit('mouse-up', e)
     },
     onEditorMouseMove (e) {
       e.preventDefault()
@@ -230,6 +250,7 @@ export default {
           break
         }
       }
+      this.$emit('mouse-move', e)
     },
     onEditorMouseWell (e) {
       // 来自rete.js

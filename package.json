@@ -1,6 +1,6 @@
 {
   "name": "vue-neon",
-  "version": "0.0.7",
+  "version": "0.0.12",
   "description": "Node Interface for Noah project",
   "author": "KaivnD <KaivnD@hotmail.com>",
   "main": "dist/vue-neon.common.js",
