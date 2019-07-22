@@ -1,6 +1,6 @@
 <template>
   <div class="output">
-    <div class="title" style="">
+    <div class="outputTitle">
       {{name}}
       <span
       :style="`--node-stat: ${color}`"
@@ -55,11 +55,10 @@ export default {
 .output {
   text-align: right;
 
-  & .title {
+  & .outputTitle {
     vertical-align: middle;
     color: #fff;
     display: inline-block;
-    font-family: sans-serif;
     font-size: 9px;
     margin: 9px;
     line-height: 9px;

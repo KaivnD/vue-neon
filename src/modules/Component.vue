@@ -158,8 +158,6 @@ export default {
     border-top: 1px solid #ccc;
     color: #fff;
     text-align: center;
-    font-weight: 700;
-    font-family: sans-serif;
     font-size: 18px;
     border-radius: 9px 9px 0 0;
     padding: 2px 8px;

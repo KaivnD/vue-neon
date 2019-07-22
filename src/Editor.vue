@@ -1,5 +1,5 @@
 <template>
-    <div ref="container" class="container"
+    <div ref="neon-warpper" class="neon-warpper"
       :class="{hand: isPan}"
       :style="`height: ${height}; width: ${width}`"
       @mousedown.right="onEditorMouseDown($event)"
@@ -8,7 +8,7 @@
       @contextmenu="onEditorCtxMenu($event)"
       @mousewheel.stop="onEditorMouseWell($event)"
     >
-      <div ref="editor" class="editor"
+      <div ref="editor" class="neon-editor"
       :style="`transform: translate(${this.transform.x}px, ${this.transform.y}px) scale(${this.transform.z});transform-origin:0 0;`"
       >
         <Grid />
@@ -310,13 +310,13 @@ export default {
     cursor: pointer;
   }
 
-  .container {
+  .neon-warpper {
     display: block;
     background-color: #303030;
     position: relative;
     overflow: hidden;
 
-    .editor {
+    .neon-editor {
       position: absolute;
 
       .connection {

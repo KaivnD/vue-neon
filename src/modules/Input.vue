@@ -1,6 +1,6 @@
 <template>
   <div class="input">
-    <div class="title" style="">
+    <div class="inputTitle">
       <span
       :style="`--node-stat: ${color}`"
       @click.right="onMouseClickR"
@@ -55,11 +55,10 @@ export default {
 .input {
   text-align: left;
 
-  & .title {
+  & .inputTitle {
     vertical-align: middle;
     color: #fff;
     display: inline-block;
-    font-family: sans-serif;
     font-size: 9px;
     margin: 9px;
     line-height: 9px;
