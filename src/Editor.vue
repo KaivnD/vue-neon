@@ -140,7 +140,7 @@ export default {
       }
     },
     onNodeMouseUp (args) {
-      let cS = this.dragNode
+      const cS = this.dragNode
       if (this.isDrag === 'Node' && cS.io !== args.io) {
         if (args.io === 'input') {
           this.generators[args.g].input[args.n].connection.push(cS)
@@ -163,7 +163,7 @@ export default {
       this.updateConnection()
     },
     onTaskInUp (args) {
-      let cS = this.dragNode
+      const cS = this.dragNode
       if (this.isDrag === 'Task') {
         this.generators[args.g].task.in = cS.g
         this.generators[cS.g].task.out = args.g
@@ -182,8 +182,8 @@ export default {
       e.stopPropagation()
       this.isPan = true
       this.isDrag = 'Editor'
-      this.pointerStart = {x: e.pageX, y: e.pageY}
-      this.startPosition = {...this.transform}
+      this.pointerStart = { x: e.pageX, y: e.pageY }
+      this.startPosition = { ...this.transform }
     },
     onEditorMouseUp (e) {
       this.isPan = false
@@ -197,17 +197,17 @@ export default {
     },
     onEditorMouseMove (e) {
       e.preventDefault()
-      let mousePos = {x: e.pageX, y: e.pageY}
+      const mousePos = { x: e.pageX, y: e.pageY }
       let zoom = this.transform.z
       switch (this.isDrag) {
         case 'Editor': {
           let delta = Vector.sub(mousePos, this.pointerStart)
           zoom = Math.sqrt(zoom, 2)
           delta = Vector.mult(delta, zoom)
-          let pos = Vector.add(this.startPosition, delta)
+          const pos = Vector.add(this.startPosition, delta)
 
-          this.transform.x = pos.x;
-          this.transform.y = pos.y;
+          this.transform.x = pos.x
+          this.transform.y = pos.y
           break
         }
         case 'Comp': {
@@ -217,11 +217,11 @@ export default {
           break
         }
         case 'Node': {
-          let comp = this.comps[this.dragNode.g]
-          let el = comp.$refs[this.dragNode.io][this.dragNode.n].$el
-          let pos = {
+          const comp = this.comps[this.dragNode.g]
+          const el = comp.$refs[this.dragNode.io][this.dragNode.n].$el
+          const pos = {
             x: comp.loc.x + el.offsetLeft + el.offsetWidth - 10,
-            y: comp.loc.y + el.offsetTop + el.offsetHeight/2
+            y: comp.loc.y + el.offsetTop + el.offsetHeight / 2
           }
           if (this.dragNode.io === 'input') {
             pos.x = comp.loc.x + el.offsetLeft + 10
@@ -235,9 +235,9 @@ export default {
           break
         }
         case 'Task': {
-          let comp = this.comps[this.dragNode.g]
-          let el = comp.$refs['name']
-          let pos = {
+          const comp = this.comps[this.dragNode.g]
+          const el = comp.$refs['name']
+          const pos = {
             x: comp.loc.x + el.offsetLeft + el.offsetWidth,
             y: comp.loc.y + el.offsetTop + el.offsetHeight
           }
@@ -257,7 +257,7 @@ export default {
       e.preventDefault()
       const rect = this.$refs.editor.getBoundingClientRect()
       const wheelDelta = e.wheelDelta
-      const delta = (wheelDelta ? wheelDelta / 120 : - e.deltaY / 3) * this.sensitive
+      const delta = (wheelDelta ? wheelDelta / 120 : -e.deltaY / 3) * this.sensitive
       const ox = (rect.left - e.pageX) * delta
       const oy = (rect.top - e.pageY) * delta
       let zoom = this.transform.z * (1 + delta)
@@ -279,8 +279,8 @@ export default {
             d: true,
             w: 6,
             c: '#141414',
-            s: {g: gen.task.in},
-            e: {g: i}
+            s: { g: gen.task.in },
+            e: { g: i }
           })
         }
         gen.input.forEach((input, j) => {
@@ -292,7 +292,7 @@ export default {
                 w: 2,
                 c: '#eee',
                 s: cn,
-                e: {g: i, n: j, io: 'input'}
+                e: { g: i, n: j, io: 'input' }
               })
             })
           }
