@@ -1,9 +1,9 @@
 import Editor from './Editor'
-import Component from './modules/Component'
+import { Generator } from './Components'
 
 function plugin (Vue) {
-  Vue.component('v-neon', Editor)
-  Vue.component('v-comp', Component)
+  Vue.component('n-editor', Editor)
+  Vue.component('n-generator', Generator)
 }
 
 // Install by default if using the script tag
@@ -16,6 +16,6 @@ const version = '__VERSION__'
 // Export all components too
 export {
   Editor,
-  Component,
+  Generator,
   version
 }

@@ -1,0 +1,64 @@
+.node {
+    border: 1px solid #000;
+    border-radius: 9px;
+    display: inline-block;
+    height: auto;
+    padding-bottom: 6px;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-box-shadow: 4px 5px 9px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 5px 9px rgba(0, 0, 0, 0.5);
+    background: #595857;
+  
+    .name {
+      border-top: 1px solid #ccc;
+      color: #fff;
+      text-align: center;
+      font-size: 18px;
+      border-radius: 9px 9px 0 0;
+      padding: 2px 8px;
+      overflow: hidden;
+      background: #2d2f30;
+  
+      .in::before {
+        content: "";
+        cursor: pointer;
+        display: inline-block;
+        position: absolute;
+        top: 22px;
+        left: 1px;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-left: 12px solid var(--task-in-stat);
+      }
+  
+      .out::after {
+        content: "";
+        cursor: pointer;
+        display: inline-block;
+        position: absolute;
+        top: 22px;
+        right: 1px;
+        border-top: 9px solid transparent;
+        border-bottom: 9px solid transparent;
+        border-right: 12px solid var(--task-out-stat);
+      }
+    }
+  
+    .content {
+      margin-top: 16px;
+      display: table;
+      width: 100%;
+      min-width: 200px;
+  
+      .column {
+        display: table-cell;
+        white-space: nowrap;
+  
+        &:not(:last-child) {
+          padding-right: 20px;
+        }
+      }
+    }
+  }
+  

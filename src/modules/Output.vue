@@ -28,7 +28,7 @@ export default {
     onMouseClickR (e) {
       this.$emit('click-r', {
         index: this.index,
-        pos: {x: e.pageX, y: e.pageY},
+        pos: { x: e.pageX, y: e.pageY },
         io: 'output'
       })
     },
@@ -36,7 +36,7 @@ export default {
       if (e.button === 0) {
         this.$emit('mouse-dn', {
           index: this.index,
-          pos: {x: e.pageX, y: e.pageY},
+          pos: { x: e.pageX, y: e.pageY },
           io: 'output'
         })
       }

@@ -33,10 +33,11 @@
             />
           </svg>
         </div>
-        <v-comp
+        <component
         ref="comps"
         v-for="(gen, i) in gens" :key="i"
         :index="i"
+        :is="gen.class"
         :name="gen.name"
         :pos="gen.pos"
         :task="gen.task"
@@ -55,12 +56,13 @@
 </template>
 
 <script>
-import VComp from './modules/Component'
+import NGenerator from './Components/Generator'
+import NInputer from './Components/Inputer'
 import Connection from './modules/Connection'
 import Vector from './libs/Vector'
 import Grid from './modules/Grid'
 export default {
-  name: 'v-neon',
+  name: 'n-editor',
   props: {
     width: String,
     height: String,
@@ -273,30 +275,34 @@ export default {
     updateConnection () {
       this.wires = []
       this.gens.forEach((gen, i) => {
-        if (gen.task.in !== null) {
-          this.wires.push({
-            t: true,
-            d: true,
-            w: 6,
-            c: '#141414',
-            s: { g: gen.task.in },
-            e: { g: i }
-          })
-        }
-        gen.input.forEach((input, j) => {
-          if (input.connection.length !== 0) {
-            input.connection.forEach(cn => {
-              this.wires.push({
-                t: false,
-                d: false,
-                w: 2,
-                c: '#eee',
-                s: cn,
-                e: { g: i, n: j, io: 'input' }
-              })
+        if (gen.task !== undefined) {
+          if (gen.task.in !== null) {
+            this.wires.push({
+              t: true,
+              d: true,
+              w: 6,
+              c: '#141414',
+              s: { g: gen.task.in },
+              e: { g: i }
             })
           }
-        })
+        }
+        if (gen.input !== undefined) {
+          gen.input.forEach((input, j) => {
+            if (input.connection.length !== 0) {
+              input.connection.forEach(cn => {
+                this.wires.push({
+                  t: false,
+                  d: false,
+                  w: 2,
+                  c: '#eee',
+                  s: cn,
+                  e: { g: i, n: j, io: 'input' }
+                })
+              })
+            }
+          })
+        }
       })
     },
     removeConnection (gen) {
@@ -317,7 +323,7 @@ export default {
       })
     }
   },
-  components: { Grid, Connection, VComp }
+  components: { Grid, Connection, NGenerator, NInputer }
 }
 </script>
 

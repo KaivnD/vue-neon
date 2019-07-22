@@ -1,12 +1,19 @@
 import Editor from 'src/Editor.vue'
 import { createVM } from '../helpers/utils.js'
 
-let app = {
+const app = {
   data: () => ({
     gens: [
       {
+        name: 'Inputer',
+        class: 'n-inputer',
+        pos: { x: -100, y: 500 },
+        output: null
+      },
+      {
         name: '规划设计',
-        pos: {x: 0, y: 500},
+        class: 'n-generator',
+        pos: { x: 0, y: 500 },
         task: {
           in: null,
           out: null
@@ -42,7 +49,8 @@ let app = {
       },
       {
         name: '总图填色',
-        pos: {x: 300, y: 400},
+        class: 'n-generator',
+        pos: { x: 300, y: 400 },
         task: {
           in: null,
           out: null
@@ -72,10 +80,11 @@ let app = {
       },
       {
         name: '立面生成',
-        pos: {x: 300, y: 600},
+        class: 'n-generator',
+        pos: { x: 300, y: 600 },
         task: {
           in: null,
-          out: null,
+          out: null
         },
         input: [
           {
@@ -107,16 +116,16 @@ let app = {
 
 describe('Editor.vue', function () {
   it('should render correct contents', function () {
-    const vm = createVM(this, `
-<Editor
-width="100%"
-height="500px"
-:state="{x: 471.16107284337284, y: -412.6972876983468, z: 1.2037325418367204}"
-:sensitive="0.1"
-:minZoom="0.3"
-:maxZoom="6"
-:generators="gens"
-/>
-`, app)
+    createVM(this, `
+    <Editor
+    width="100%"
+    height="500px"
+    :state="{x: 471.16107284337284, y: -412.6972876983468, z: 1.2037325418367204}"
+    :sensitive="0.1"
+    :minZoom="0.3"
+    :maxZoom="6"
+    :generators="gens"
+    />
+    `, app)
   })
 })

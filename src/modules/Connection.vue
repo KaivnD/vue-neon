@@ -37,11 +37,11 @@ export default {
       this.$emit('click-db', this.index)
     },
     getNodePos (args) {
-      let comp = this.$parent.comps[args.g]
-      let el = comp.$refs[args.io][args.n].$el
-      let pos = {
+      const comp = this.$parent.comps[args.g]
+      const el = comp.$refs[args.io][args.n].$el
+      const pos = {
         x: comp.loc.x + el.offsetLeft + el.offsetWidth - 9.5,
-        y: comp.loc.y + el.offsetTop + el.offsetHeight/2 + 2
+        y: comp.loc.y + el.offsetTop + el.offsetHeight / 2 + 2
       }
       if (args.io === 'input') {
         pos.x = comp.loc.x + el.offsetLeft + 10
@@ -49,13 +49,13 @@ export default {
       return pos
     },
     getTaskPos (g, io) {
-      let comp = this.$parent.comps[g]
-      let el = comp.$refs['name']
-      let pos = {
+      const comp = this.$parent.comps[g]
+      const el = comp.$refs['name']
+      const pos = {
         x: comp.loc.x + el.offsetLeft + el.offsetWidth + 3,
         y: comp.loc.y + el.offsetTop + el.offsetHeight
       }
-      let pos2 = {
+      const pos2 = {
         x: comp.loc.x,
         y: comp.loc.y + el.offsetHeight
       }
