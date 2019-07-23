@@ -7,8 +7,13 @@ const app = {
       {
         name: 'Inputer',
         class: 'n-inputer',
-        pos: { x: -100, y: 500 },
-        output: null
+        pos: { x: -300, y: 500 },
+        output: [
+          {
+            value: null,
+            connection: []
+          }
+        ]
       },
       {
         name: '规划设计',

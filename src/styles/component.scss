@@ -9,7 +9,7 @@
     -webkit-box-shadow: 4px 5px 9px rgba(0, 0, 0, 0.5);
     box-shadow: 4px 5px 9px rgba(0, 0, 0, 0.5);
     background: #595857;
-  
+
     .name {
       border-top: 1px solid #ccc;
       color: #fff;
@@ -19,7 +19,7 @@
       padding: 2px 8px;
       overflow: hidden;
       background: #2d2f30;
-  
+
       .in::before {
         content: "";
         cursor: pointer;
@@ -31,7 +31,7 @@
         border-bottom: 9px solid transparent;
         border-left: 12px solid var(--task-in-stat);
       }
-  
+
       .out::after {
         content: "";
         cursor: pointer;
@@ -44,21 +44,21 @@
         border-right: 12px solid var(--task-out-stat);
       }
     }
-  
+
     .content {
       margin-top: 16px;
       display: table;
       width: 100%;
       min-width: 200px;
-  
+
       .column {
         display: table-cell;
+        vertical-align: middle;
         white-space: nowrap;
-  
+
         &:not(:last-child) {
           padding-right: 20px;
         }
       }
     }
   }
-  
