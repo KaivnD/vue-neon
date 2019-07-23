@@ -43,6 +43,11 @@
         :task="gen.task"
         :input="gen.input"
         :output="gen.output"
+        :platform="gen.platform"
+        :uuid="gen.uuid"
+        :ext="gen.file_ext"
+        :table="gen.table"
+        :version="gen.version"
         @on-comp-mouse-dn="onCompMouseDn"
         @on-comp-mouse-up="onCompMouseUp"
         @node-mouse-dn="onNodeMouseDn"
@@ -50,6 +55,7 @@
         @task-in-up="onTaskInUp"
         @task-out-dn="onTaskOutDn"
         @node-click-r="onNodeClickR"
+        @comp-click-db="onCompClickDB"
         />
       </div>
     </div>
@@ -58,6 +64,7 @@
 <script>
 import NGenerator from './Components/Generator'
 import NInputer from './Components/Inputer'
+import NFileInput from './Components/FileInput'
 import Connection from './modules/Connection'
 import Vector from './libs/Vector'
 import Grid from './modules/Grid'
@@ -99,7 +106,6 @@ export default {
   },
   methods: {
     bindKey (e) {
-      console.log(e)
       if (e.ctrlKey && e.keyCode === 83) {
         // Ctrl + S 保存功能
         this.$emit('ctrl-s')
@@ -134,6 +140,9 @@ export default {
       this.dragCompPos = null
       this.dragCompOffset = null
       this.ghostWrie = null
+    },
+    onCompClickDB (args) {
+      this.$emit('comp-click-db', args)
     },
     onNodeMouseDn (args) {
       if (args.io === 'output') {
@@ -323,7 +332,7 @@ export default {
       })
     }
   },
-  components: { Grid, Connection, NGenerator, NInputer }
+  components: { Grid, Connection, NGenerator, NInputer, NFileInput }
 }
 </script>
 
