@@ -2,6 +2,7 @@
   <div
   @mousedown.left="onMouseDn"
   @mouseup.left="onMouseUp"
+  @dblclick="onClickDB"
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`">
     <div class="node">
       <div class="name" ref="name">
@@ -54,6 +55,15 @@ import Output from '../modules/Output'
 import Component from '../libs/Component'
 export default {
   name: 'n-generator',
+  methods: {
+    onClickDB (e) {
+      e.stopPropagation()
+      this.$emit('comp-click-db', {
+        name: 'n-generator',
+        index: this.index
+      })
+    }
+  },
   mixins: [Component],
   components: { Input, Output }
 }

@@ -16,6 +16,17 @@ const app = {
         ]
       },
       {
+        name: 'File',
+        class: 'n-file-input',
+        pos: { x: -300, y: 550 },
+        output: [
+          {
+            value: null,
+            connection: []
+          }
+        ]
+      },
+      {
         name: '规划设计',
         class: 'n-generator',
         pos: { x: 0, y: 500 },

@@ -5,7 +5,12 @@ export default {
     pos: Object,
     task: Object,
     input: Array,
-    output: Array
+    output: Array,
+    platform: String,
+    uuid: String,
+    version: String,
+    ext: String,
+    table: Array
   },
   data () {
     return {
