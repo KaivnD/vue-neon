@@ -5,11 +5,11 @@
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`"
   >
     <div class="node p0">
-      <div class="content mt0">
+      <div class="content mt0 pt0">
         <div class="column">
           <div class="nickName">
             <i class="material-icons">content_paste</i>
-            <p class="m0" ref="inputer" @focus="onFocus" @blur="onBlur" @mousedown.left="onEdit" contenteditable="true" 
+            <p class="m0" ref="inputer" @focus="onFocus" @blur="onBlur" @mousedown.left="onEdit" contenteditable="true"
             style="caret-color: white;outline:0px;" v-text="(value === null) ? '点击输入内容' : value">
             </p>
           </div>
@@ -90,8 +90,8 @@ export default {
     font-size: 12px;
     display: inline-block;
     min-width: 100px;
-    position: absolute;
-    top: 10px;
+    position: relative;
+    top: -8px;
   }
 }
 </style>
