@@ -2,11 +2,10 @@
   <div
   @mousedown.left="onMouseDn"
   @mouseup.left="onMouseUp"
-  @dblclick="onClickDB"
   @click.right="onRightClick"
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`">
     <div class="node">
-      <div class="name" ref="name">
+      <div class="name" ref="name" @dblclick="onClickDB">
         <span class="in"
           :style="`--task-in-stat: ${taskInColor}`"
           @mousedown.left="onTaskInDn"
@@ -27,14 +26,17 @@
           </svg>
         </span> -->
       </div>
-      <div class="menu">
-        <div class="item" 
-        v-for="(item, index) in menuItems" 
+      <div class="menu" :style="`top: ${menu ? '-35' : '0'}px;`">
+        <div class="item"
+        v-for="(item, index) in menuItems"
         :key="index"
-        :style="`left:${0}px;`"
-        ></div>
+        :style="`left:${(index - 3 / 2) * menuSize + (index - 1) * 10}px;`"
+        @click.stop="onMenuItemClick(index)"
+        >
+        <i class="material-icons">{{item.icon}}</i>
+        </div>
       </div>
-      <div class="content">
+      <div class="content"  @dblclick="onClickDB">
         <div class="column">
           <Input
             ref="input"
@@ -74,15 +76,19 @@ export default {
   data () {
     return {
       menu: false,
+      menuSize: 30,
       menuItems: [
         {
-          name: '运行'
+          name: '运行',
+          icon: 'play_arrow'
         },
         {
-          name: '选项'
+          name: '选项',
+          icon: 'settings'
         },
         {
-          name: '参数'
+          name: '参数',
+          icon: 'grid_on'
         }
       ],
       running: false
@@ -97,9 +103,15 @@ export default {
       })
     },
     onRightClick (e) {
+      // e.preventDefault()
       // e.stopPropagation()
-      this.menu = true
-      console.log(this.name)
+      this.menu = !this.menu
+    },
+    onMenuItemClick(index) {
+      this.$emit('menu-item-click', {
+        index: this.index,
+        menu: index
+      })
     }
   },
   mixins: [Component],
@@ -128,8 +140,9 @@ export default {
 
 .menu {
   position: absolute;
-  top: 0;
   left: 50%;
+  transition: all 300ms ease-in-out;
+  z-index: -1;
 
   .item {
     width: 30px;
@@ -138,7 +151,18 @@ export default {
     position: absolute;
     border-radius: 50%;
     background-color: slategrey;
+    transition: all 300ms ease-in-out;
+    cursor: pointer;
+
+    > i {
+      padding: 6px;
+      font-size: large;
+      color: white;
+    }
+
+    &:hover {
+      background-color: darkgray;
+    }
   }
 }
-
 </style>

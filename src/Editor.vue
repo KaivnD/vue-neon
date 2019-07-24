@@ -56,6 +56,7 @@
         @task-out-dn="onTaskOutDn"
         @node-click-r="onNodeClickR"
         @comp-click-db="onCompClickDB"
+        @menu-item-click="onMenuItemClick"
         />
       </div>
     </div>
@@ -330,6 +331,9 @@ export default {
           })
         }
       })
+    },
+    onMenuItemClick (args) {
+      this.$emit('menu-item-click', args)
     }
   },
   components: { Grid, Connection, NGenerator, NInputer, NFileInput }
