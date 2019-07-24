@@ -6,7 +6,7 @@
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`"
   >
     <div class="node p0">
-      <div class="content mt0">
+      <div class="content mt0 pt0">
         <div class="column">
           <div class="nickName">
             <i class="material-icons">attach_file</i>
@@ -92,8 +92,8 @@ export default {
     font-size: 12px;
     display: inline-block;
     min-width: 100px;
-    position: absolute;
-    top: 10px;
+    position: relative;
+    top: -8px;
   }
 }
 </style>
