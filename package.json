@@ -1,6 +1,6 @@
 {
   "name": "vue-neon",
-  "version": "0.0.13-fix4",
+  "version": "0.0.17",
   "description": "Node Interface for Noah project",
   "author": "KaivnD <KaivnD@hotmail.com>",
   "main": "dist/vue-neon.common.js",
@@ -9,8 +9,7 @@
   "unpkg": "dist/vue-neon.js",
   "style": "dist/vue-neon.css",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
     "clean": "rimraf dist",
