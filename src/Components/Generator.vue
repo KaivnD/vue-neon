@@ -107,7 +107,7 @@ export default {
       // e.stopPropagation()
       this.menu = !this.menu
     },
-    onMenuItemClick(index) {
+    onMenuItemClick (index) {
       this.$emit('menu-item-click', {
         index: this.index,
         menu: index
