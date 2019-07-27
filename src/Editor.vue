@@ -111,7 +111,7 @@ export default {
         this.$emit('ctrl-s')
       } else if (e.keyCode === 46) {
         this.removeConnection(this.gens[this.selectedGen])
-        let tmp = []
+        const tmp = []
         this.gens.forEach((gen, i) => {
           if (this.selectedGen !== i) {
             tmp.push(gen)
@@ -210,7 +210,7 @@ export default {
       this.startPosition = { ...this.transform }
     },
     onEditorMouseUp (e) {
-      if (e.toElement.tagName === "rect" && this.comps !== undefined) {
+      if (e.toElement.tagName === 'rect' && this.comps !== undefined) {
         // 确保鼠标抬起瞬间不是生成器
         this.comps.forEach(element => {
           element.selected = false
