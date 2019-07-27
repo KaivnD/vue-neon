@@ -37,7 +37,7 @@
         ref="comps"
         v-for="(gen, i) in gens" :key="i"
         :index="i"
-        :is="gen.class"
+        :is="gen.component"
         :name="gen.name"
         :pos="gen.pos"
         :task="gen.task"
@@ -63,9 +63,6 @@
 </template>
 
 <script>
-import NGenerator from './Components/Generator'
-import NInputer from './Components/Inputer'
-import NFileInput from './Components/FileInput'
 import Connection from './modules/Connection'
 import Vector from './libs/Vector'
 import Grid from './modules/Grid'
@@ -78,7 +75,8 @@ export default {
     state: Object,
     minZoom: Number,
     maxZoom: Number,
-    generators: Array
+    generators: Array,
+    components: {}
   },
   data () {
     return {
@@ -93,7 +91,8 @@ export default {
       dragCompOffset: null,
       pointerStart: [],
       startPosition: {},
-      transform: this.state
+      transform: this.state,
+      selectedGen: null
     }
   },
   computed: {
@@ -111,7 +110,15 @@ export default {
         // Ctrl + S 保存功能
         this.$emit('ctrl-s')
       } else if (e.keyCode === 46) {
-
+        this.removeConnection(this.gens[this.selectedGen])
+        let tmp = []
+        this.gens.forEach((gen, i) => {
+          if (this.selectedGen !== i) {
+            tmp.push(gen)
+          }
+        })
+        this.gens = tmp
+        this.updateConnection()
       } else if (e.keyCode === 27) {
         if (this.isDragging === 'Node') {
           this.ghostWrie = null
@@ -134,6 +141,11 @@ export default {
       this.dragComp = this.comps[args.i]
       this.dragCompPos = this.comps[args.i].loc
       this.dragCompOffset = args.pos
+      this.selectedGen = args.i
+      this.comps.forEach(element => {
+        element.selected = false
+      })
+      this.comps[args.i].selected = true
     },
     onCompMouseUp (args) {
       this.isDrag = null
@@ -155,11 +167,11 @@ export default {
       const cS = this.dragNode
       if (this.isDrag === 'Node' && cS.io !== args.io) {
         if (args.io === 'input') {
-          this.generators[args.g].input[args.n].connection.push(cS)
-          this.generators[cS.g].output[cS.n].connection.push(args)
+          this.gens[args.g].input[args.n].connection.push(cS)
+          this.gens[cS.g].output[cS.n].connection.push(args)
         } else if (args.io === 'output') {
-          this.generators[args.g].output[args.n].connection.push(cS)
-          this.generators[cS.g].input[cS.n].connection.push(args)
+          this.gens[args.g].output[args.n].connection.push(cS)
+          this.gens[cS.g].input[cS.n].connection.push(args)
         }
 
         this.ghostWrie = null
@@ -177,8 +189,8 @@ export default {
     onTaskInUp (args) {
       const cS = this.dragNode
       if (this.isDrag === 'Task') {
-        this.generators[args.g].task.in = cS.g
-        this.generators[cS.g].task.out = args.g
+        this.gens[args.g].task.in = cS.g
+        this.gens[cS.g].task.out = args.g
       }
       this.isDrag = null
       this.ghostWrie = null
@@ -198,6 +210,13 @@ export default {
       this.startPosition = { ...this.transform }
     },
     onEditorMouseUp (e) {
+      if (e.toElement.tagName === "rect" && this.comps !== undefined) {
+        // 确保鼠标抬起瞬间不是生成器
+        this.comps.forEach(element => {
+          element.selected = false
+        })
+      }
+      console.log(e)
       this.isPan = false
       this.isDrag = null
       this.dragNode = null
@@ -316,27 +335,32 @@ export default {
       })
     },
     removeConnection (gen) {
+      console.log(gen)
       this.wries = []
-      gen.input.forEach(input => {
-        if (input.connection.length !== 0) {
-          input.connection.forEach(cn => {
-            this.gens[cn.g].output[cn.n].connection = []
-          })
-        }
-      })
-      gen.output.forEach((output, j) => {
-        if (output.connection.length !== 0) {
-          output.connection.forEach(cn => {
-            this.gens[cn.g].input[cn.n].connection = []
-          })
-        }
-      })
+      if (gen.input instanceof Array) {
+        gen.input.forEach(input => {
+          if (input.connection.length !== 0) {
+            input.connection.forEach(cn => {
+              this.gens[cn.g].output[cn.n].connection = []
+            })
+          }
+        })
+      }
+      if (gen.output instanceof Array) {
+        gen.output.forEach((output, j) => {
+          if (output.connection.length !== 0) {
+            output.connection.forEach(cn => {
+              this.gens[cn.g].input[cn.n].connection = []
+            })
+          }
+        })
+      }
     },
     onMenuItemClick (args) {
       this.$emit('menu-item-click', args)
     }
   },
-  components: { Grid, Connection, NGenerator, NInputer, NFileInput }
+  components: { Grid, Connection }
 }
 </script>
 

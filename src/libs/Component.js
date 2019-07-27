@@ -14,7 +14,8 @@ export default {
   },
   data () {
     return {
-      loc: this.pos
+      loc: this.pos,
+      selected: false
     }
   },
   computed: {

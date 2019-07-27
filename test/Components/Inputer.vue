@@ -1,17 +1,16 @@
 <template>
   <div
-  @dblclick="onClickDB"
   @mousedown.left="onMouseDn"
   @mouseup.left="onMouseUp"
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`"
   >
-    <div class="node p0">
+    <div class="node p0" :style="`${(selected ? 'opacity: 0.8;' : '')}`">
       <div class="content mt0 pt0">
         <div class="column">
           <div class="nickName">
-            <i class="material-icons">attach_file</i>
-            <p class="m0" ref="fileinput"
-            style="caret-color: white;outline:0px;" v-text="(value === null) ? '双击指定文件' : value">
+            <i class="material-icons">content_paste</i>
+            <p class="m0" ref="inputer" @focus="onFocus" @blur="onBlur" @mousedown.left="onEdit" contenteditable="true"
+            style="caret-color: white;outline:0px;" v-text="(value === null) ? '点击输入内容' : value">
             </p>
           </div>
         </div>
@@ -34,27 +33,25 @@
 </template>
 
 <script>
-import Component from '../libs/Component'
-import Output from '../modules/Output'
+import { CompMixin, Output } from '../../src'
 export default {
-  name: 'n-file-input',
+  name: 'n-inputer',
   data () {
     return {
-      value: this.output[0].value
+      value: null
     }
   },
+  created () {
+    this.value = this.output[0].value
+  },
   watch: {
-    output (val) {
-      this.value = this.output[0].value
+    value: function (val) {
+      this.output[0].value = val
     }
   },
   methods: {
-    onClickDB (e) {
+    onEdit (e) {
       e.stopPropagation()
-      this.$emit('comp-click-db', {
-        name: 'n-file-input',
-        index: this.index
-      })
     },
     onFocus () {
       if (this.value === null) {
@@ -69,13 +66,13 @@ export default {
       }
     }
   },
-  mixins: [Component],
+  mixins: [CompMixin],
   components: { Output }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/main.scss';
+@import './main.scss';
 
 .column {
   vertical-align: middle;

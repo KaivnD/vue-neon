@@ -1,5 +1,8 @@
 import Editor from 'src/Editor.vue'
 import { createVM } from '../helpers/utils.js'
+import NGenerator from '../Components/Generator'
+import NInputer from '../Components/Inputer'
+import NFileInput from '../Components/FileInput'
 
 const app = {
   data: () => ({
@@ -7,6 +10,7 @@ const app = {
       {
         name: 'Inputer',
         class: 'n-inputer',
+        component: NInputer,
         pos: { x: -300, y: 500 },
         output: [
           {
@@ -18,6 +22,7 @@ const app = {
       {
         name: 'File',
         class: 'n-file-input',
+        component: NFileInput,
         pos: { x: -300, y: 550 },
         output: [
           {
@@ -29,6 +34,7 @@ const app = {
       {
         name: '规划设计',
         class: 'n-generator',
+        component: NGenerator,
         pos: { x: 0, y: 500 },
         task: {
           in: null,
@@ -66,6 +72,7 @@ const app = {
       {
         name: '总图填色',
         class: 'n-generator',
+        component: NGenerator,
         pos: { x: 300, y: 400 },
         task: {
           in: null,
@@ -97,6 +104,7 @@ const app = {
       {
         name: '立面生成',
         class: 'n-generator',
+        component: NGenerator,
         pos: { x: 300, y: 600 },
         task: {
           in: null,

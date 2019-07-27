@@ -1,9 +1,12 @@
 import Editor from './Editor'
-import { Generator } from './Components'
+import CompMixin from './libs/Component'
+import Input from './modules/Input'
+import Output from './modules/Output'
 
 function plugin (Vue) {
   Vue.component('n-editor', Editor)
-  Vue.component('n-generator', Generator)
+  Vue.component('n-input', Input)
+  Vue.component('n-output', Output)
 }
 
 // Install by default if using the script tag
@@ -16,6 +19,8 @@ const version = '__VERSION__'
 // Export all components too
 export {
   Editor,
-  Generator,
-  version
+  version,
+  Input,
+  Output,
+  CompMixin
 }

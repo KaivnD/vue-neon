@@ -1,6 +1,6 @@
 {
   "name": "vue-neon",
-  "version": "0.0.17",
+  "version": "0.0.25",
   "description": "Node Interface for Noah project",
   "author": "KaivnD <KaivnD@hotmail.com>",
   "main": "dist/vue-neon.common.js",
@@ -72,7 +72,6 @@
     "karma-spec-reporter": "^0.0.31",
     "karma-webpack": "^2.0.0",
     "lint-staged": "^3.4.0",
-    "material-design-icons-iconfont": "^5.0.1",
     "mocha": "^3.3.0",
     "mocha-css": "^1.0.1",
     "node-sass": "^4.12.0",

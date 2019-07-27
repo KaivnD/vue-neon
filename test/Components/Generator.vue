@@ -4,7 +4,7 @@
   @mouseup.left="onMouseUp"
   @click.right="onRightClick"
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`">
-    <div class="node">
+    <div class="node" :style="`${(selected ? 'opacity: 0.8;' : '')}`">
       <div class="name" ref="name" @dblclick="onClickDB">
         <span class="in"
           :style="`--task-in-stat: ${taskInColor}`"
@@ -26,7 +26,7 @@
           </svg>
         </span> -->
       </div>
-      <div class="menu" :style="`top: ${menu ? '-35' : '0'}px;`">
+      <div class="menu" :style="`top: ${menu ? '-35' : '1'}px;`">
         <div class="item"
         v-for="(item, index) in menuItems"
         :key="index"
@@ -68,9 +68,7 @@
   </div>
 </template>
 <script>
-import Input from '../modules/Input'
-import Output from '../modules/Output'
-import Component from '../libs/Component'
+import { CompMixin, Output, Input } from '../../src'
 export default {
   name: 'n-generator',
   data () {
@@ -114,13 +112,13 @@ export default {
       })
     }
   },
-  mixins: [Component],
+  mixins: [CompMixin],
   components: { Input, Output }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/main.scss';
+@import './main.scss';
 
 .runIcon {
   stroke-dasharray: 340;
