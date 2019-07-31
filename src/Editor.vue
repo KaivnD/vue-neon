@@ -95,6 +95,12 @@ export default {
       selectedGen: null
     }
   },
+  watch: {
+    generators: function(nV, oV) {
+      this.gens = nV
+      this.updateConnection()
+    }
+  },
   computed: {
     comps () {
       return this.$refs.comps

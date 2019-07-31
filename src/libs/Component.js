@@ -15,15 +15,17 @@ export default {
   data () {
     return {
       loc: this.pos,
-      selected: false
+      selected: false,
+      taskInColor: 'white',
+      taskOutColor: 'white'
     }
   },
-  computed: {
-    taskInColor () {
-      return (this.task.in === null) ? 'white' : '#EE7434'
-    },
-    taskOutColor () {
-      return (this.task.out === null) ? 'white' : '#EE7434'
+  watch: {
+    task: function (nV, oV) {
+      if (nV.in !== null) this.taskInColor = '#EE7434'
+      else this.taskInColor = 'white'
+      if (nV.out !== null) this.taskOutColor = '#EE7434'
+      else this.taskOutColor = 'white'
     }
   },
   methods: {

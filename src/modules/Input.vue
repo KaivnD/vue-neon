@@ -19,9 +19,16 @@ export default {
     name: String,
     connection: Array
   },
-  computed: {
-    color () {
-      return (this.connection.length === 0) ? 'white' : '#EE7434'
+  data () {
+    return {
+      color: 'white'
+    }
+  },
+  watch: {
+    connection: function (nV, oV) {
+      if (this.connection.length > 0) {
+        this.color = '#EE7434'
+      } else this.color = 'white'
     }
   },
   methods: {
