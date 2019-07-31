@@ -96,7 +96,7 @@ export default {
     }
   },
   watch: {
-    generators: function(nV, oV) {
+    generators: function (nV, oV) {
       this.gens = nV
       this.updateConnection()
     }
