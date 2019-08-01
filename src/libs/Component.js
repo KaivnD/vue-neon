@@ -15,9 +15,17 @@ export default {
   data () {
     return {
       loc: this.pos,
-      selected: false,
-      taskInColor: 'white',
-      taskOutColor: 'white'
+      selected: false
+    }
+  },
+  computed: {
+    taskInColor: function () {
+      return (this.task.in === undefined || this.task.in === null)
+              ? 'white' : '#EE7434'
+    },
+    taskOutColor: function () {
+      return (this.task.out === undefined || this.task.out === null)
+              ? 'white' : '#EE7434'
     }
   },
   watch: {

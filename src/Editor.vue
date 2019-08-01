@@ -75,8 +75,7 @@ export default {
     state: Object,
     minZoom: Number,
     maxZoom: Number,
-    generators: Array,
-    components: {}
+    generators: Array
   },
   data () {
     return {
@@ -91,19 +90,13 @@ export default {
       dragCompOffset: null,
       pointerStart: [],
       startPosition: {},
-      transform: this.state,
-      selectedGen: null
+      transform: this.state
     }
   },
   watch: {
     generators: function (nV, oV) {
       this.gens = nV
       this.updateConnection()
-    }
-  },
-  computed: {
-    comps () {
-      return this.$refs.comps
     }
   },
   mounted () {
@@ -116,15 +109,7 @@ export default {
         // Ctrl + S 保存功能
         this.$emit('ctrl-s')
       } else if (e.keyCode === 46) {
-        this.removeConnection(this.gens[this.selectedGen])
-        const tmp = []
-        this.gens.forEach((gen, i) => {
-          if (this.selectedGen !== i) {
-            tmp.push(gen)
-          }
-        })
-        this.gens = tmp
-        this.updateConnection()
+        // TO DO 删除功能
       } else if (e.keyCode === 27) {
         if (this.isDragging === 'Node') {
           this.ghostWrie = null
@@ -144,14 +129,9 @@ export default {
     },
     onCompMouseDn (args) {
       this.isDrag = 'Comp'
-      this.dragComp = this.comps[args.i]
-      this.dragCompPos = this.comps[args.i].loc
+      this.dragComp = this.$refs.comps[args.i]
+      this.dragCompPos = this.$refs.comps[args.i].loc
       this.dragCompOffset = args.pos
-      this.selectedGen = args.i
-      this.comps.forEach(element => {
-        element.selected = false
-      })
-      this.comps[args.i].selected = true
     },
     onCompMouseUp (args) {
       this.isDrag = null
@@ -216,13 +196,13 @@ export default {
       this.startPosition = { ...this.transform }
     },
     onEditorMouseUp (e) {
-      if (e.toElement.tagName === 'rect' && this.comps !== undefined) {
-        // 确保鼠标抬起瞬间不是生成器
-        this.comps.forEach(element => {
-          element.selected = false
-        })
-      }
-      console.log(e)
+      // if (e.toElement.tagName === 'rect' && this.$refs.comps !== null) {
+      //   // 确保鼠标抬起瞬间不是生成器
+      //   this.$refs.comps.forEach(element => {
+      //     element.selected = false
+      //   })
+      // }
+      // console.log(e)
       this.isPan = false
       this.isDrag = null
       this.dragNode = null
@@ -254,7 +234,7 @@ export default {
           break
         }
         case 'Node': {
-          const comp = this.comps[this.dragNode.g]
+          const comp = this.$refs.comps[this.dragNode.g]
           const el = comp.$refs[this.dragNode.io][this.dragNode.n].$el
           const pos = {
             x: comp.loc.x + el.offsetLeft + el.offsetWidth - 10,
@@ -272,7 +252,7 @@ export default {
           break
         }
         case 'Task': {
-          const comp = this.comps[this.dragNode.g]
+          const comp = this.$refs.comps[this.dragNode.g]
           const el = comp.$refs['name']
           const pos = {
             x: comp.loc.x + el.offsetLeft + el.offsetWidth,
@@ -309,36 +289,38 @@ export default {
     },
     updateConnection () {
       this.wires = []
-      this.gens.forEach((gen, i) => {
-        if (gen.task !== undefined) {
-          if (gen.task.in !== null) {
-            this.wires.push({
-              t: true,
-              d: true,
-              w: 6,
-              c: '#141414',
-              s: { g: gen.task.in },
-              e: { g: i }
-            })
-          }
-        }
-        if (gen.input !== undefined) {
-          gen.input.forEach((input, j) => {
-            if (input.connection.length !== 0) {
-              input.connection.forEach(cn => {
-                this.wires.push({
-                  t: false,
-                  d: false,
-                  w: 2,
-                  c: '#eee',
-                  s: cn,
-                  e: { g: i, n: j, io: 'input' }
-                })
+      if (this.gens !== null || this.gens !== undefined) {
+        this.gens.forEach((gen, i) => {
+          if (gen.task !== undefined) {
+            if (gen.task.in !== null) {
+              this.wires.push({
+                t: true,
+                d: true,
+                w: 6,
+                c: '#141414',
+                s: { g: gen.task.in, comp: this.$refs.comps[gen.task.in] },
+                e: { g: i, comp: this.$refs.comps[i] }
               })
             }
-          })
-        }
-      })
+          }
+          if (gen.input !== undefined) {
+            gen.input.forEach((input, j) => {
+              if (input.connection.length !== 0) {
+                input.connection.forEach(cn => {
+                  this.wires.push({
+                    t: false,
+                    d: false,
+                    w: 2,
+                    c: '#eee',
+                    s: Object.assign({comp: this.$refs.comps[cn.g]}, cn),
+                    e: { g: i, n: j, io: 'input', comp: this.$refs.comps[i] }
+                  })
+                })
+              }
+            })
+          }
+        })
+      }
     },
     removeConnection (gen) {
       console.log(gen)

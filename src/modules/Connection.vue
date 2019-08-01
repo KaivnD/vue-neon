@@ -20,10 +20,10 @@ export default {
   },
   computed: {
     s: function () {
-      return this.task ? this.getTaskPos(this.start.g, 'out') : this.getNodePos(this.start)
+      return this.task ? this.getTaskPos(this.start, 'out') : this.getNodePos(this.start)
     },
     e: function () {
-      return this.task ? this.getTaskPos(this.end.g, 'in') : this.getNodePos(this.end)
+      return this.task ? this.getTaskPos(this.end, 'in') : this.getNodePos(this.end)
     }
   },
   data: function () {
@@ -33,11 +33,10 @@ export default {
   },
   methods: {
     onClickDB () {
-      console.log(123)
       this.$emit('click-db', this.index)
     },
     getNodePos (args) {
-      const comp = this.$parent.comps[args.g]
+      const comp = args.comp
       const el = comp.$refs[args.io][args.n].$el
       const pos = {
         x: comp.loc.x + el.offsetLeft + el.offsetWidth - 9.5,
@@ -48,8 +47,8 @@ export default {
       }
       return pos
     },
-    getTaskPos (g, io) {
-      const comp = this.$parent.comps[g]
+    getTaskPos (args, io) {
+      const comp = args.comp
       const el = comp.$refs['name']
       const pos = {
         x: comp.loc.x + el.offsetLeft + el.offsetWidth + 3,
