@@ -312,7 +312,7 @@ export default {
                     d: false,
                     w: 2,
                     c: '#eee',
-                    s: Object.assign({comp: this.$refs.comps[cn.g]}, cn),
+                    s: Object.assign({ comp: this.$refs.comps[cn.g] }, cn),
                     e: { g: i, n: j, io: 'input', comp: this.$refs.comps[i] }
                   })
                 })
