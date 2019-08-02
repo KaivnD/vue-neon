@@ -12,6 +12,7 @@ export default {
   props: {
     index: Number,
     task: Boolean,
+    value: String,
     dash: Boolean,
     width: Number,
     color: String,

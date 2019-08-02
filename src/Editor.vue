@@ -30,6 +30,7 @@
               :color="item.c"
               :start="item.s"
               :end="item.e"
+              :value="item.v"
             />
           </svg>
         </div>
@@ -48,6 +49,7 @@
         :ext="gen.file_ext"
         :table="gen.table"
         :version="gen.version"
+        :options="gen.options"
         @on-comp-mouse-dn="onCompMouseDn"
         @on-comp-mouse-up="onCompMouseUp"
         @node-mouse-dn="onNodeMouseDn"
@@ -57,6 +59,7 @@
         @node-click-r="onNodeClickR"
         @comp-click-db="onCompClickDB"
         @menu-item-click="onMenuItemClick"
+        @on-resize="onResize"
         />
       </div>
     </div>
@@ -151,12 +154,16 @@ export default {
     },
     onNodeMouseUp (args) {
       const cS = this.dragNode
+      const cnFromDrag = Object.assign({
+        value: this.gens[cS.g].output[cS.n].value
+      }, cS)
+      console.log(cnFromDrag)
       if (this.isDrag === 'Node' && cS.io !== args.io) {
         if (args.io === 'input') {
-          this.gens[args.g].input[args.n].connection.push(cS)
+          this.gens[args.g].input[args.n].connection.push(cnFromDrag)
           this.gens[cS.g].output[cS.n].connection.push(args)
         } else if (args.io === 'output') {
-          this.gens[args.g].output[args.n].connection.push(cS)
+          this.gens[args.g].output[args.n].connection.push(cnFromDrag)
           this.gens[cS.g].input[cS.n].connection.push(args)
         }
 
@@ -299,7 +306,8 @@ export default {
                 w: 6,
                 c: '#141414',
                 s: { g: gen.task.in, comp: this.$refs.comps[gen.task.in] },
-                e: { g: i, comp: this.$refs.comps[i] }
+                e: { g: i, comp: this.$refs.comps[i] },
+                v: ''
               })
             }
           }
@@ -313,7 +321,8 @@ export default {
                     w: 2,
                     c: '#eee',
                     s: Object.assign({ comp: this.$refs.comps[cn.g] }, cn),
-                    e: { g: i, n: j, io: 'input', comp: this.$refs.comps[i] }
+                    e: { g: i, n: j, io: 'input', comp: this.$refs.comps[i] },
+                    v: this.$refs.comps[cn.g].output[cn.n].value
                   })
                 })
               }
@@ -346,6 +355,9 @@ export default {
     },
     onMenuItemClick (args) {
       this.$emit('menu-item-click', args)
+    },
+    onResize (args) {
+      this.$emit('on-resize', args)
     }
   },
   components: { Grid, Connection }

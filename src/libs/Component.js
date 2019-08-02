@@ -10,7 +10,8 @@ export default {
     uuid: String,
     version: String,
     ext: String,
-    table: Array
+    table: Array,
+    options: Object
   },
   data () {
     return {
