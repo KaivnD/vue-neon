@@ -35,6 +35,16 @@ export default {
       else this.taskInColor = 'white'
       if (nV.out !== null) this.taskOutColor = '#EE7434'
       else this.taskOutColor = 'white'
+    },
+    output: {
+      // 监听输出端变化， 有新的变化就通知编辑器刷新链接
+      handler (nV, oV) {
+        this.$emit('on-comp-output-change', {
+          index: this.index,
+          value: nV
+        })
+      },
+      deep: true
     }
   },
   methods: {

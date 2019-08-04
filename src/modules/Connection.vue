@@ -2,7 +2,6 @@
     <path :d="`M${s.x},${s.y}C${s.x + 66},${s.y},${e.x - 66},${e.y},${e.x},${e.y}`"
     :stroke-dasharray="dash ? '1, 10' : '0'"
     stroke-linecap="round"
-    @dblclick="onClickDB"
     :stroke="color" fill="none" :stroke-width="width" stroke-miterlimit="10"/>
 </template>
 
@@ -17,7 +16,17 @@ export default {
     width: Number,
     color: String,
     start: Object,
-    end: Object
+    end: Object,
+    type: String
+  },
+  watch: {
+    value: function (nv, ov) {
+      // 监听链接值端变化，变化后，通过编辑器告知其所连接端输入端抓取新的值
+      this.$emit('on-conn-value-change', {
+        v: nv,
+        e: this.end
+      })
+    }
   },
   computed: {
     s: function () {
@@ -33,9 +42,6 @@ export default {
     }
   },
   methods: {
-    onClickDB () {
-      this.$emit('click-db', this.index)
-    },
     getNodePos (args) {
       const comp = args.comp
       const el = comp.$refs[args.io][args.n].$el

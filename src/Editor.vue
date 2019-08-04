@@ -22,7 +22,7 @@
             stroke-width="2"
             stroke="#fff" fill="none" stroke-miterlimit="10"/>
             <Connection
-              v-for="(item, index) in wires" :key="index"
+              v-for="(item, index) in wires" :key="`cn_${index}`"
               :index="index"
               :task="item.t"
               :dash="item.d"
@@ -31,12 +31,14 @@
               :start="item.s"
               :end="item.e"
               :value="item.v"
+              :type="item.tp"
+              @on-conn-value-change="onConnValueChange"
             />
           </svg>
         </div>
         <component
         ref="comps"
-        v-for="(gen, i) in gens" :key="i"
+        v-for="(gen, i) in gens" :key="`gen_${i}`"
         :index="i"
         :is="gen.component"
         :name="gen.name"
@@ -59,7 +61,7 @@
         @node-click-r="onNodeClickR"
         @comp-click-db="onCompClickDB"
         @menu-item-click="onMenuItemClick"
-        @on-resize="onResize"
+        @on-comp-output-change="onCompOutputChange"
         />
       </div>
     </div>
@@ -106,6 +108,7 @@ export default {
     this.updateConnection()
     document.addEventListener('keydown', this.bindKey)
   },
+// 不能使用 update钩子， 一旦使用就会卡死
   methods: {
     bindKey (e) {
       if (e.ctrlKey && e.keyCode === 83) {
@@ -146,6 +149,10 @@ export default {
     onCompClickDB (args) {
       this.$emit('comp-click-db', args)
     },
+    onCompOutputChange (value) {
+      this.updateConnection()
+      this.$emit('on-comp-output-change', value)
+    },
     onNodeMouseDn (args) {
       if (args.io === 'output') {
         this.isDrag = 'Node'
@@ -155,9 +162,9 @@ export default {
     onNodeMouseUp (args) {
       const cS = this.dragNode
       const cnFromDrag = Object.assign({
-        value: this.gens[cS.g].output[cS.n].value
+        type: (cS !== null) ? this.gens[cS.g].output[cS.n].type : null,
+        value: (cS !== null) ? this.gens[cS.g].output[cS.n].value : null
       }, cS)
-      console.log(cnFromDrag)
       if (this.isDrag === 'Node' && cS.io !== args.io) {
         if (args.io === 'input') {
           this.gens[args.g].input[args.n].connection.push(cnFromDrag)
@@ -307,7 +314,6 @@ export default {
                 c: '#141414',
                 s: { g: gen.task.in, comp: this.$refs.comps[gen.task.in] },
                 e: { g: i, comp: this.$refs.comps[i] },
-                v: ''
               })
             }
           }
@@ -315,6 +321,7 @@ export default {
             gen.input.forEach((input, j) => {
               if (input.connection.length !== 0) {
                 input.connection.forEach(cn => {
+                  const output = this.$refs.comps[cn.g].output[cn.n]
                   this.wires.push({
                     t: false,
                     d: false,
@@ -322,7 +329,8 @@ export default {
                     c: '#eee',
                     s: Object.assign({ comp: this.$refs.comps[cn.g] }, cn),
                     e: { g: i, n: j, io: 'input', comp: this.$refs.comps[i] },
-                    v: this.$refs.comps[cn.g].output[cn.n].value
+                    v: output.value || null,
+                    tp: output.type || null
                   })
                 })
               }
@@ -332,7 +340,6 @@ export default {
       }
     },
     removeConnection (gen) {
-      console.log(gen)
       this.wries = []
       if (gen.input instanceof Array) {
         gen.input.forEach(input => {
@@ -357,7 +364,11 @@ export default {
       this.$emit('menu-item-click', args)
     },
     onResize (args) {
-      this.$emit('on-resize', args)
+      this.updateConnection()
+    },
+    onConnValueChange (args) {
+      this.gens[args.e.g].input[args.e.n].value = args.v
+      this.gens[args.e.g].input[args.e.n].connection[0].value = args.v
     }
   },
   components: { Grid, Connection }
