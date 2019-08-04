@@ -17,6 +17,7 @@ export default {
   props: {
     index: Number,
     name: String,
+    type: String,
     connection: Array
   },
   computed: {
