@@ -9,6 +9,7 @@
   "unpkg": "dist/vue-neon.js",
   "style": "dist/vue-neon.css",
   "files": [
+    "src",
     "dist"
   ],
   "scripts": {
