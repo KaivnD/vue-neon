@@ -10,6 +10,9 @@
 npm install --save vue-neon
 ```
 
+## Example
+[Code Pen](https://codepen.io/kaivnd/pen/oKwPbw)
+
 ## Usage
 
 ### Bundler (Webpack, Rollup)
