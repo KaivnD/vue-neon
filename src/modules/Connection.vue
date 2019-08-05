@@ -17,7 +17,7 @@ export default {
     color: String,
     start: Object,
     end: Object,
-    type: String
+    type: Number
   },
   watch: {
     value: function (nv, ov) {
