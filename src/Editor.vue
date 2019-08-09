@@ -323,7 +323,7 @@ export default {
                 w: 6,
                 c: '#141414',
                 s: { g: gen.task.in, comp: this.$refs.comps[gen.task.in] },
-                e: { g: i, comp: this.$refs.comps[i] },
+                e: { g: i, comp: this.$refs.comps[i] }
               })
             }
           }
