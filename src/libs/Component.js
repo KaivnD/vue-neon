@@ -55,6 +55,26 @@ export default {
         })
       },
       deep: true
+    },
+    input: {
+      // 监听输入变化， 有新的变化就通知编辑器刷新链接
+      handler (nV, oV) {
+        this.$emit('on-comp-input-change', {
+          index: this.index,
+          value: nV
+        })
+      },
+      deep: true
+    },
+    table: {
+      // 监听表格变化， 有新的变化就通知编辑器刷新链接
+      handler (nV, oV) {
+        this.$emit('on-comp-table-change', {
+          index: this.index,
+          value: nV
+        })
+      },
+      deep: true
     }
   },
   methods: {

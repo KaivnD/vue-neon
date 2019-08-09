@@ -62,6 +62,8 @@
         @comp-click-db="onCompClickDB"
         @menu-item-click="onMenuItemClick"
         @on-comp-output-change="onCompOutputChange"
+        @on-comp-input-change="onCompInputChange"
+        @on-comp-table-change="onCompTableChange"
         />
       </div>
     </div>
@@ -152,6 +154,14 @@ export default {
     onCompOutputChange (value) {
       this.updateConnection()
       this.$emit('on-comp-output-change', value)
+    },
+    onCompInputChange (value) {
+      this.updateConnection()
+      this.$emit('on-comp-input-change', value)
+    },
+    onCompTableChange (value) {
+      this.updateConnection()
+      this.$emit('on-comp-table-change', value)
     },
     onNodeMouseDn (args) {
       if (args.io === 'output') {
