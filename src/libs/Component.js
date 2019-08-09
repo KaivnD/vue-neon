@@ -20,13 +20,23 @@ export default {
     }
   },
   computed: {
-    taskInColor: function () {
-      return (this.task.in === undefined || this.task.in === null)
-              ? 'white' : '#EE7434'
+    taskInColor: {
+      get: function () {
+        return (this.task.in === undefined || this.task.in === null)
+                ? 'white' : '#EE7434'
+      },
+      set: function (nv) {
+        return nv
+      }
     },
-    taskOutColor: function () {
-      return (this.task.out === undefined || this.task.out === null)
-              ? 'white' : '#EE7434'
+    taskOutColor: {
+      get: function () {
+        return (this.task.out === undefined || this.task.out === null)
+                ? 'white' : '#EE7434'
+      },
+      set: function (nv) {
+        return nv
+      }
     }
   },
   watch: {
