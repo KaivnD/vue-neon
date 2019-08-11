@@ -118,6 +118,30 @@ export default {
         this.$emit('ctrl-s')
       } else if (e.keyCode === 46) {
         // TO DO 删除功能
+        const index = this.$refs.comps.findIndex(el => el.selected === true)
+        this.removeConnection(this.gens[index])
+        const gens = this.gens.filter(el => this.gens.indexOf(el) !== index)
+        if (gens !== '') {
+          const comps = this.$refs.comps
+          const tmp = []
+          comps.forEach((comp, i) => {
+            // 保存最新位置
+            if (comp.index !== index) {
+              tmp.push(comp.loc)
+            }
+          })
+          this.gens = this.gens.filter(el => this.gens.indexOf(el) !== index)
+          comps.forEach((comp, i) => {
+            // 保存最新位置
+            // comp.index = i
+            comp.loc = tmp[i]
+          })
+          console.log(this.gens)
+          console.log(this.$refs.comps)
+          // this.gens = []
+          // this.gens = tmp
+        }
+        this.updateConnection()
       } else if (e.keyCode === 27) {
         if (this.isDragging === 'Node') {
           this.ghostWrie = null
@@ -139,6 +163,8 @@ export default {
       this.isDrag = 'Comp'
       this.dragComp = this.$refs.comps[args.i]
       this.dragCompPos = this.$refs.comps[args.i].loc
+      this.$refs.comps.forEach(el => (el.selected = false))
+      this.$refs.comps[args.i].selected = true
       this.dragCompOffset = args.pos
     },
     onCompMouseUp (args) {
@@ -220,12 +246,12 @@ export default {
       this.startPosition = { ...this.transform }
     },
     onEditorMouseUp (e) {
-      // if (e.toElement.tagName === 'rect' && this.$refs.comps !== null) {
-      //   // 确保鼠标抬起瞬间不是生成器
-      //   this.$refs.comps.forEach(element => {
-      //     element.selected = false
-      //   })
-      // }
+      if (e.toElement.tagName === 'rect' && this.$refs.comps !== undefined) {
+        // 确保鼠标抬起瞬间不是生成器
+        this.$refs.comps.forEach(element => {
+          element.selected = false
+        })
+      }
       // console.log(e)
       this.isPan = false
       this.isDrag = null

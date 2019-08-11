@@ -4,7 +4,8 @@
   @mouseup.left="onMouseUp"
   @click.right="onRightClick"
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`">
-    <div class="node" :style="`${(selected ? 'opacity: 0.8;' : '')}`">
+  <div class="border" v-if="selected"></div>
+    <div class="node">
       <div class="name" ref="name" @dblclick="onClickDB">
         <span class="in"
           :style="`--task-in-stat: ${taskInColor}`"

@@ -5,7 +5,8 @@
   @mouseup.left="onMouseUp"
   :style="`position: absolute; touch-action: none; transform: translate(${loc.x}px, ${loc.y}px);`"
   >
-    <div class="node p0" :style="`${(selected ? 'opacity: 0.8;' : '')}`">
+   <div class="border" v-if="selected"></div>
+    <div class="node p0">
       <div class="content mt0 pt0">
         <div class="column">
           <div class="nickName">
