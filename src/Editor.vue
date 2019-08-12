@@ -38,7 +38,7 @@
         </div>
         <component
         ref="comps"
-        v-for="(gen, i) in gens" :key="gen.uuid"
+        v-for="(gen, i) in gens" :key="gen.guid"
         :index="i"
         :is="gen.component"
         :name="gen.name"
@@ -73,6 +73,7 @@
 import Connection from './modules/Connection'
 import Vector from './libs/Vector'
 import Grid from './modules/Grid'
+import uuid from 'uuid'
 export default {
   name: 'n-editor',
   props: {
@@ -90,7 +91,7 @@ export default {
       isDrag: '',
       wires: [],
       ghostWrie: null,
-      gens: this.generators,
+      gens: null,
       dragNode: null,
       dragComp: null,
       dragCompPos: null,
@@ -100,10 +101,21 @@ export default {
       transform: this.state
     }
   },
+  created () {
+    this.gens = this.generators
+  },
   watch: {
     generators: function (nV, oV) {
       this.gens = nV
       this.updateConnection()
+    },
+    gens: function (nv) {
+      console.log(nv)
+      this.gens.forEach(el => {
+        if (el.guid === undefined) {
+          el.guid = uuid.v4()
+        }
+      })
     }
   },
   mounted () {
