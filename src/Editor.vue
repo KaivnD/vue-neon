@@ -370,23 +370,35 @@ export default {
     },
     removeConnection (gen) {
       this.wries = []
-      if (gen.input instanceof Array) {
-        gen.input.forEach(input => {
-          if (input.connection.length !== 0) {
-            input.connection.forEach(cn => {
-              this.gens[cn.g].output[cn.n].connection = []
-            })
-          }
-        })
+      if (gen.task !== undefined) {
+        if (gen.task.in !== null) {
+          this.gens[gen.task.in].task.out = null
+          gen.task.in = null
+        }
+        if (gen.task.out !== null) {
+          this.gens[gen.task.out].task.in = null
+          gen.task.out = null
+        }
       }
-      if (gen.output instanceof Array) {
-        gen.output.forEach((output, j) => {
-          if (output.connection.length !== 0) {
-            output.connection.forEach(cn => {
-              this.gens[cn.g].input[cn.n].connection = []
-            })
-          }
-        })
+      if (gen.input !== undefined && gen.output !== undefined) {
+        if (gen.input instanceof Array) {
+          gen.input.forEach(input => {
+            if (input.connection.length !== 0) {
+              input.connection.forEach(cn => {
+                this.gens[cn.g].output[cn.n].connection = []
+              })
+            }
+          })
+        }
+        if (gen.output instanceof Array) {
+          gen.output.forEach((output, j) => {
+            if (output.connection.length !== 0) {
+              output.connection.forEach(cn => {
+                this.gens[cn.g].input[cn.n].connection = []
+              })
+            }
+          })
+        }
       }
     },
     onMenuItemClick (args) {
@@ -396,8 +408,11 @@ export default {
       this.updateConnection()
     },
     onConnValueChange (args) {
-      this.gens[args.e.g].input[args.e.n].value = args.v
-      this.gens[args.e.g].input[args.e.n].connection[0].value = args.v
+      let input = this.gens[args.e.g].input[args.e.n]
+      if (input !== undefined) {
+        input.value = args.v
+        input.connection[0].value = args.v
+      }
     }
   },
   components: { Grid, Connection }

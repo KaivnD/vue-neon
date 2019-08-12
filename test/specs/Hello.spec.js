@@ -46,7 +46,7 @@ const app = {
         input: [
           {
             name: '用地红线',
-            type: '0',
+            type: 0,
             value: '',
             connection: []
           }
@@ -54,19 +54,19 @@ const app = {
         output: [
           {
             name: '平面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           },
           {
             name: '立面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           },
           {
             name: '体量模型',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           }
@@ -85,7 +85,7 @@ const app = {
         input: [
           {
             name: '平面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           }
@@ -93,13 +93,13 @@ const app = {
         output: [
           {
             name: '平面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           },
           {
             name: '立面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           }
@@ -118,7 +118,7 @@ const app = {
         input: [
           {
             name: '立面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           }
@@ -126,13 +126,13 @@ const app = {
         output: [
           {
             name: '平面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           },
           {
             name: '立面线稿',
-            type: '1',
+            type: 1,
             value: '',
             connection: []
           }
