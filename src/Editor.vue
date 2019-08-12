@@ -38,7 +38,7 @@
         </div>
         <component
         ref="comps"
-        v-for="(gen, i) in gens" :key="`gen_${i}`"
+        v-for="(gen, i) in gens" :key="gen.uuid"
         :index="i"
         :is="gen.component"
         :name="gen.name"
@@ -115,32 +115,13 @@ export default {
     bindKey (e) {
       if (e.ctrlKey && e.keyCode === 83) {
         // Ctrl + S 保存功能
-        this.$emit('ctrl-s')
+        this.$emit('ctrl-s', this.gens)
+        console.log(this.gens)
       } else if (e.keyCode === 46) {
         // TO DO 删除功能
         const index = this.$refs.comps.findIndex(el => el.selected === true)
         this.removeConnection(this.gens[index])
-        const gens = this.gens.filter(el => this.gens.indexOf(el) !== index)
-        if (gens !== '') {
-          const comps = this.$refs.comps
-          const tmp = []
-          comps.forEach((comp, i) => {
-            // 保存最新位置
-            if (comp.index !== index) {
-              tmp.push(comp.loc)
-            }
-          })
-          this.gens = this.gens.filter(el => this.gens.indexOf(el) !== index)
-          comps.forEach((comp, i) => {
-            // 保存最新位置
-            // comp.index = i
-            comp.loc = tmp[i]
-          })
-          console.log(this.gens)
-          console.log(this.$refs.comps)
-          // this.gens = []
-          // this.gens = tmp
-        }
+        this.gens = this.gens.splice(index, 1)
         this.updateConnection()
       } else if (e.keyCode === 27) {
         if (this.isDragging === 'Node') {
