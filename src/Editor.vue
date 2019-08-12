@@ -408,7 +408,7 @@ export default {
       this.updateConnection()
     },
     onConnValueChange (args) {
-      let input = this.gens[args.e.g].input[args.e.n]
+      const input = this.gens[args.e.g].input[args.e.n]
       if (input !== undefined) {
         input.value = args.v
         input.connection[0].value = args.v
