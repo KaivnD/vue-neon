@@ -113,7 +113,7 @@ export default {
       console.log(nv)
       this.gens.forEach(el => {
         if (el.guid === undefined) {
-          el.guid = uuid.v4()
+          el.guid = uuid.v1()
         }
       })
     }
