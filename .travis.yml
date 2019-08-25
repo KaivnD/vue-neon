@@ -18,7 +18,8 @@ jobs:
        - node --version
        - npm --version
        - echo "Testing Started ..."
-       - npm test
+       - yarn build:dll
+       - yarn test
        - echo "Testing Finished."
 
    - stage: deploy
