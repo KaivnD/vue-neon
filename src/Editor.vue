@@ -1,44 +1,53 @@
 <template>
-    <div ref="neon-warpper" class="neon-warpper"
-      :class="{hand: isPan}"
-      :style="`height: ${height}; width: ${width}`"
-      @mousedown.right="onEditorMouseDown($event)"
-      @mousemove="onEditorMouseMove($event)"
-      @mouseup="onEditorMouseUp($event)"
-      @contextmenu="onEditorCtxMenu($event)"
-      @mousewheel.stop="onEditorMouseWell($event)"
-    >
-      <div ref="editor" class="neon-editor"
+  <div
+    ref="neon-warpper"
+    class="neon-warpper"
+    :class="{hand: isPan}"
+    :style="`height: ${height}; width: ${width}`"
+    @mousedown.right="onEditorMouseDown($event)"
+    @mousemove="onEditorMouseMove($event)"
+    @mouseup="onEditorMouseUp($event)"
+    @contextmenu="onEditorCtxMenu($event)"
+    @mousewheel.stop="onEditorMouseWell($event)"
+  >
+    <div
+      ref="editor"
+      class="neon-editor"
       :style="`transform: translate(${this.transform.x}px, ${this.transform.y}px) scale(${this.transform.z});transform-origin:0 0;`"
-      >
-        <Grid />
-        <div style="position: absolute; z-index: -1;">
-          <svg class="connection">
-            <path
+    >
+      <Grid />
+      <div style="position: absolute; z-index: -1;">
+        <svg class="connection">
+          <path
             v-if="ghostWrie !== null"
             :d="`M${ghostWrie.s.x},${ghostWrie.s.y}C${ghostWrie.s.x + 66},
             ${ghostWrie.s.y},${ghostWrie.e.x - 66},
             ${ghostWrie.e.y},${ghostWrie.e.x},${ghostWrie.e.y}`"
             stroke-width="2"
-            stroke="#fff" fill="none" stroke-miterlimit="10"/>
-            <Connection
-              v-for="(item, index) in wires" :key="`cn_${index}`"
-              :index="index"
-              :task="item.t"
-              :dash="item.d"
-              :width="item.w"
-              :color="item.c"
-              :start="item.s"
-              :end="item.e"
-              :value="item.v"
-              :type="item.tp"
-              @on-conn-value-change="onConnValueChange"
-            />
-          </svg>
-        </div>
-        <component
+            stroke="#fff"
+            fill="none"
+            stroke-miterlimit="10"
+          />
+          <Connection
+            v-for="(item, index) in wires"
+            :key="`cn_${index}`"
+            :index="index"
+            :task="item.t"
+            :dash="item.d"
+            :width="item.w"
+            :color="item.c"
+            :start="item.s"
+            :end="item.e"
+            :value="item.v"
+            :type="item.tp"
+            @on-conn-value-change="onConnValueChange"
+          />
+        </svg>
+      </div>
+      <component
         ref="comps"
-        v-for="(gen, i) in gens" :key="gen.guid"
+        v-for="(gen, i) in gens"
+        :key="gen.guid"
         :index="i"
         :is="gen.component"
         :name="gen.name"
@@ -58,15 +67,16 @@
         @node-mouse-up="onNodeMouseUp"
         @task-in-up="onTaskInUp"
         @task-out-dn="onTaskOutDn"
+        @task-click-r="onTaskClickR"
         @node-click-r="onNodeClickR"
         @comp-click-db="onCompClickDB"
         @menu-item-click="onMenuItemClick"
         @on-comp-output-change="onCompOutputChange"
         @on-comp-input-change="onCompInputChange"
         @on-comp-table-change="onCompTableChange"
-        />
-      </div>
+      />
     </div>
+  </div>
 </template>
 
 <script>
@@ -110,7 +120,6 @@ export default {
       this.updateConnection()
     },
     gens: function (nv) {
-      console.log(nv)
       this.gens.forEach(el => {
         if (el.guid === undefined) {
           el.guid = uuid.v1()
@@ -122,7 +131,7 @@ export default {
     this.updateConnection()
     document.addEventListener('keydown', this.bindKey)
   },
-// 不能使用 update钩子， 一旦使用就会卡死
+  // 不能使用 update钩子， 一旦使用就会卡死
   methods: {
     bindKey (e) {
       if (e.ctrlKey && e.keyCode === 83) {
@@ -192,10 +201,13 @@ export default {
     },
     onNodeMouseUp (args) {
       const cS = this.dragNode
-      const cnFromDrag = Object.assign({
-        type: (cS !== null) ? this.gens[cS.g].output[cS.n].type : null,
-        value: (cS !== null) ? this.gens[cS.g].output[cS.n].value : null
-      }, cS)
+      const cnFromDrag = Object.assign(
+        {
+          type: cS !== null ? this.gens[cS.g].output[cS.n].type : null,
+          value: cS !== null ? this.gens[cS.g].output[cS.n].value : null
+        },
+        cS
+      )
       if (this.isDrag === 'Node' && cS.io !== args.io) {
         if (args.io === 'input') {
           this.gens[args.g].input[args.n].connection.push(cnFromDrag)
@@ -217,9 +229,27 @@ export default {
       this.gens[args.g][args.io][args.n].connection = []
       this.updateConnection()
     },
+    onTaskClickR (args) {
+      const io = this.gens[args.g].task[args.io]
+      if (args.io === 'in') {
+        this.gens[io].task.out = null
+        this.gens[args.g].task.in = null
+      } else {
+        this.gens[io].task.in = null
+        this.gens[args.g].task.out = null
+      }
+
+      console.log(io)
+      this.updateConnection()
+    },
     onTaskInUp (args) {
       const cS = this.dragNode
       if (this.isDrag === 'Task') {
+        const originTask = this.gens[cS.g].task
+        console.log(originTask.out)
+        if (originTask.out !== null) {
+          this.gens[originTask.out].task.in = null
+        }
         this.gens[args.g].task.in = cS.g
         this.gens[cS.g].task.out = args.g
       }
@@ -319,14 +349,20 @@ export default {
       e.preventDefault()
       const rect = this.$refs.editor.getBoundingClientRect()
       const wheelDelta = e.wheelDelta
-      const delta = (wheelDelta ? wheelDelta / 120 : -e.deltaY / 3) * this.sensitive
+      const delta =
+        (wheelDelta ? wheelDelta / 120 : -e.deltaY / 3) * this.sensitive
       const ox = (rect.left - e.pageX) * delta
       const oy = (rect.top - e.pageY) * delta
       let zoom = this.transform.z * (1 + delta)
-      zoom = (zoom < this.minZoom) ? this.minZoom : ((zoom > this.maxZoom) ? this.maxZoom : zoom)
+      zoom =
+        zoom < this.minZoom
+          ? this.minZoom
+          : zoom > this.maxZoom
+          ? this.maxZoom
+          : zoom
       const z = this.transform.z
 
-      const d = (z - zoom) / ((z - zoom) || 1)
+      const d = (z - zoom) / (z - zoom || 1)
 
       this.transform.z = zoom || 1
       this.transform.x += ox * d
@@ -424,34 +460,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  * {
-    user-select: none;
-    box-sizing: border-box;
-  }
+* {
+  user-select: none;
+  box-sizing: border-box;
+}
 
-  .hand {
-    cursor: pointer;
-  }
+.hand {
+  cursor: pointer;
+}
 
-  .neon-warpper {
-    display: block;
-    background-color: #303030;
-    position: relative;
-    overflow: hidden;
+.neon-warpper {
+  display: block;
+  background-color: #303030;
+  position: relative;
+  overflow: hidden;
 
-    .neon-editor {
+  .neon-editor {
+    position: absolute;
+
+    .connection {
+      overflow: visible !important;
       position: absolute;
+      z-index: -1;
+      pointer-events: none;
+    }
 
-      .connection {
-        overflow: visible !important;
-        position: absolute;
-        z-index: -1;
-        pointer-events: none;
-      }
-
-      & > * {
-        position: absolute;
-      }
+    & > * {
+      position: absolute;
     }
   }
+}
 </style>

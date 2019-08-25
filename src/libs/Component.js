@@ -23,7 +23,7 @@ export default {
     taskInColor: {
       get: function () {
         return (this.task.in === undefined || this.task.in === null)
-                ? 'white' : '#EE7434'
+          ? 'white' : '#EE7434'
       },
       set: function (nv) {
         return nv
@@ -32,7 +32,7 @@ export default {
     taskOutColor: {
       get: function () {
         return (this.task.out === undefined || this.task.out === null)
-                ? 'white' : '#EE7434'
+          ? 'white' : '#EE7434'
       },
       set: function (nv) {
         return nv
@@ -83,6 +83,14 @@ export default {
         g: this.index,
         n: args.index,
         io: args.io
+      })
+    },
+    onTaskClickR (e, io) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.$emit('task-click-r', {
+        g: this.index,
+        io: io
       })
     },
     onMouseDn (e) {
