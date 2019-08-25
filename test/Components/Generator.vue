@@ -75,53 +75,53 @@
   </div>
 </template>
 <script>
-import { CompMixin, Output, Input } from "../../src";
+import { CompMixin, Output, Input } from '../../src'
 export default {
-  name: "n-generator",
-  data() {
+  name: 'n-generator',
+  data () {
     return {
       menu: false,
       menuSize: 30,
       menuItems: [
         {
-          name: "运行",
-          icon: "play_arrow"
+          name: '运行',
+          icon: 'play_arrow'
         },
         {
-          name: "选项",
-          icon: "settings"
+          name: '选项',
+          icon: 'settings'
         },
         {
-          name: "参数",
-          icon: "grid_on"
+          name: '参数',
+          icon: 'grid_on'
         }
       ],
       running: false
-    };
+    }
   },
   methods: {
-    onClickDB(e) {
-      e.stopPropagation();
-      this.$emit("comp-click-db", {
-        name: "n-generator",
+    onClickDB (e) {
+      e.stopPropagation()
+      this.$emit('comp-click-db', {
+        name: 'n-generator',
         index: this.index
-      });
+      })
     },
-    onRightClick(e) {
+    onRightClick (e) {
       // e.preventDefault()
       // e.stopPropagation()
-      this.menu = !this.menu;
+      this.menu = !this.menu
     },
-    onMenuItemClick(index) {
-      this.$emit("menu-item-click", {
+    onMenuItemClick (index) {
+      this.$emit('menu-item-click', {
         index: this.index,
         menu: index
-      });
+      })
     }
   },
   mixins: [CompMixin],
   components: { Input, Output }
-};
+}
 </script>
 
 <style lang="scss" scoped>
