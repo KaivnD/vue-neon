@@ -1,0 +1,37 @@
+language : node_js
+node_js:
+ - "10"
+ - "9"
+install:
+- yarn
+os:
+ - linux
+
+stages:
+ - test
+ - name: deploy
+
+jobs:
+ include:
+   - stage: test
+     script:
+       - node --version
+       - npm --version
+       - echo "Testing Started ..."
+       - npm test
+       - echo "Testing Finished."
+
+   - stage: deploy
+     script:
+       - echo "NPM Deploying Started ..."
+       - npm version
+       - yarn build
+       - echo "NPM Building Finished."
+
+     deploy:
+       provider: npm
+       email: KaivnD@hotmail.com
+       api_key: "8bc201e3-65a6-48e4-b322-9a87e376051a"
+       skip_cleanup: true
+       on:
+         all_branches: true
