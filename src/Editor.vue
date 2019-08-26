@@ -75,6 +75,7 @@
         @on-comp-input-change="onCompInputChange"
         @on-comp-table-change="onCompTableChange"
       />
+      <slot />
     </div>
   </div>
 </template>
