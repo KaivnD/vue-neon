@@ -141,12 +141,12 @@ export default {
         console.log(this.gens)
       } else if (e.keyCode === 46) {
         // TO DO 删除功能
-        if (this.$refs.comps !== undefined) {
-          const index = this.$refs.comps.findIndex(el => el.selected === true)
-          this.removeConnection(this.gens[index])
-          this.gens = this.gens.splice(index, 1)
-          this.updateConnection()
-        }
+        // if (this.$refs.comps !== undefined) {
+        //   const index = this.$refs.comps.findIndex(el => el.selected === true)
+        //   this.removeConnection(this.gens[index])
+        //   this.gens = this.gens.splice(index, 1)
+        //   this.updateConnection()
+        // }
       } else if (e.keyCode === 27) {
         if (this.isDragging === 'Node') {
           this.ghostWrie = null
