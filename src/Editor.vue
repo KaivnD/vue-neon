@@ -46,9 +46,9 @@
       </div>
       <component
         ref="comps"
-        v-for="(gen, i) in gens"
+        v-for="gen in gens"
         :key="gen.guid"
-        :index="i"
+        :guid="gen.guid"
         :is="gen.component"
         :name="gen.name"
         :pos="gen.pos"
@@ -138,7 +138,6 @@ export default {
       if (e.ctrlKey && e.keyCode === 83) {
         // Ctrl + S 保存功能
         this.$emit('ctrl-s', this.gens)
-        console.log(this.gens)
       } else if (e.keyCode === 46) {
         // TO DO 删除功能
         if (this.$refs.comps !== undefined) {
@@ -166,12 +165,18 @@ export default {
         e.preventDefault()
       }
     },
+    getComp (guid) {
+      return this.$refs.comps.find(el => el.guid === guid)
+    },
+    getGen (guid) {
+      return this.gens.find(el => el.guid === guid)
+    },
     onCompMouseDn (args) {
       this.isDrag = 'Comp'
-      this.dragComp = this.$refs.comps[args.i]
-      this.dragCompPos = this.$refs.comps[args.i].loc
+      this.dragComp = this.getComp(args.g)
+      this.dragCompPos = this.getComp(args.g).loc
       this.$refs.comps.forEach(el => (el.selected = false))
-      this.$refs.comps[args.i].selected = true
+      this.getComp(args.g).selected = true
       this.dragCompOffset = args.pos
     },
     onCompMouseUp (args) {
@@ -202,22 +207,19 @@ export default {
         this.dragNode = args
       }
     },
-    onNodeMouseUp (args) {
-      const cS = this.dragNode
+    onNodeMouseUp (to) {
+      const from = this.dragNode
       const cnFromDrag = Object.assign(
         {
-          type: cS !== null ? this.gens[cS.g].output[cS.n].type : null,
-          value: cS !== null ? this.gens[cS.g].output[cS.n].value : null
+          type: from !== null ? this.getGen(from.g).output[from.n].type : null,
+          value: from !== null ? this.getGen(from.g).output[from.n].value : null
         },
-        cS
+        from
       )
-      if (this.isDrag === 'Node' && cS.io !== args.io) {
-        if (args.io === 'input') {
-          this.gens[args.g].input[args.n].connection.push(cnFromDrag)
-          this.gens[cS.g].output[cS.n].connection.push(args)
-        } else if (args.io === 'output') {
-          this.gens[args.g].output[args.n].connection.push(cnFromDrag)
-          this.gens[cS.g].input[cS.n].connection.push(args)
+      if (this.isDrag === 'Node' && from.io !== to.io) {
+        if (to.io === 'input') {
+          this.getGen(to.g).input[to.n].connection.push(cnFromDrag)
+          this.getGen(from.g).output[from.n].connection.push(to)
         }
 
         this.ghostWrie = null
@@ -226,35 +228,32 @@ export default {
       }
     },
     onNodeClickR (args) {
-      this.gens[args.g][args.io][args.n].connection.forEach(c => {
+      this.getGen(args.g)[args.io][args.n].connection.forEach(c => {
         this.gens[c.g][c.io][c.n].connection = []
       })
-      this.gens[args.g][args.io][args.n].connection = []
+      this.getGen(args.g)[args.io][args.n].connection = []
       this.updateConnection()
     },
     onTaskClickR (args) {
-      const io = this.gens[args.g].task[args.io]
+      const io = this.getGen(args.g).task[args.io]
       if (args.io === 'in') {
         this.gens[io].task.out = null
-        this.gens[args.g].task.in = null
+        this.getGen(args.g).task.in = null
       } else {
         this.gens[io].task.in = null
-        this.gens[args.g].task.out = null
+        this.getGen(args.g).task.out = null
       }
-
-      console.log(io)
       this.updateConnection()
     },
     onTaskInUp (args) {
       const cS = this.dragNode
       if (this.isDrag === 'Task') {
-        const originTask = this.gens[cS.g].task
-        console.log(originTask.out)
+        const originTask = this.getGen(cS.g).task
         if (originTask.out !== null) {
-          this.gens[originTask.out].task.in = null
+          this.getGen(originTask.out).task.in = null
         }
-        this.gens[args.g].task.in = cS.g
-        this.gens[cS.g].task.out = args.g
+        this.getGen(args.g).task.in = cS.g
+        this.getGen(cS.g).task.out = args.g
       }
       this.isDrag = null
       this.ghostWrie = null
@@ -280,7 +279,6 @@ export default {
           element.selected = false
         })
       }
-      // console.log(e)
       this.isPan = false
       this.isDrag = null
       this.dragNode = null
@@ -312,7 +310,7 @@ export default {
           break
         }
         case 'Node': {
-          const comp = this.$refs.comps[this.dragNode.g]
+          const comp = this.getComp(this.dragNode.g)
           const el = comp.$refs[this.dragNode.io][this.dragNode.n].$el
           const pos = {
             x: comp.loc.x + el.offsetLeft + el.offsetWidth - 10,
@@ -330,7 +328,7 @@ export default {
           break
         }
         case 'Task': {
-          const comp = this.$refs.comps[this.dragNode.g]
+          const comp = this.getComp(this.dragNode.g)
           const el = comp.$refs['name']
           const pos = {
             x: comp.loc.x + el.offsetLeft + el.offsetWidth,
@@ -374,7 +372,7 @@ export default {
     updateConnection () {
       this.wires = []
       if (this.gens !== null || this.gens !== undefined) {
-        this.gens.forEach((gen, i) => {
+        this.gens.forEach(gen => {
           if (gen.task !== undefined) {
             if (gen.task.in !== null) {
               this.wires.push({
@@ -382,8 +380,8 @@ export default {
                 d: true,
                 w: 6,
                 c: '#141414',
-                s: { g: gen.task.in, comp: this.$refs.comps[gen.task.in] },
-                e: { g: i, comp: this.$refs.comps[i] }
+                s: { g: gen.task.in, comp: this.getComp(gen.task.in) },
+                e: { g: gen.guid, comp: this.getComp(gen.guid) }
               })
             }
           }
@@ -391,14 +389,14 @@ export default {
             gen.input.forEach((input, j) => {
               if (input.connection.length !== 0) {
                 input.connection.forEach(cn => {
-                  const output = this.$refs.comps[cn.g].output[cn.n]
+                  const output = this.getComp(cn.g).output[cn.n]
                   this.wires.push({
                     t: false,
                     d: false,
                     w: 2,
                     c: '#eee',
-                    s: Object.assign({ comp: this.$refs.comps[cn.g] }, cn),
-                    e: { g: i, n: j, io: 'input', comp: this.$refs.comps[i] },
+                    s: Object.assign({ comp: this.getComp(cn.g) }, cn),
+                    e: { g: gen.guid, n: j, io: 'input', comp: this.getComp(gen.guid) },
                     v: output.value || null,
                     tp: output.type || null
                   })
@@ -414,11 +412,11 @@ export default {
       if (gen !== undefined) {
         if (gen.task !== undefined) {
           if (gen.task.in !== null) {
-            this.gens[gen.task.in].task.out = null
+            this.getGen(gen.task.in).task.out = null
             gen.task.in = null
           }
           if (gen.task.out !== null) {
-            this.gens[gen.task.out].task.in = null
+            this.getGen(gen.task.out).task.in = null
             gen.task.out = null
           }
         }
@@ -427,7 +425,7 @@ export default {
             gen.input.forEach(input => {
               if (input.connection.length !== 0) {
                 input.connection.forEach(cn => {
-                  this.gens[cn.g].output[cn.n].connection = []
+                  this.getGen(cn.g).output[cn.n].connection = []
                 })
               }
             })
@@ -436,7 +434,7 @@ export default {
             gen.output.forEach((output, j) => {
               if (output.connection.length !== 0) {
                 output.connection.forEach(cn => {
-                  this.gens[cn.g].input[cn.n].connection = []
+                  this.getGen(cn.g).input[cn.n].connection = []
                 })
               }
             })
@@ -451,7 +449,7 @@ export default {
       this.updateConnection()
     },
     onConnValueChange (args) {
-      const input = this.gens[args.e.g].input[args.e.n]
+      const input = this.getGen(args.e.g).input[args.e.n]
       if (input !== undefined) {
         input.value = args.v
         input.connection[0].value = args.v

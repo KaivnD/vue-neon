@@ -1,12 +1,12 @@
 export default {
   props: {
-    index: Number,
     name: String,
     pos: Object,
     task: Object,
     input: Array,
     output: Array,
     platform: String,
+    guid: String,
     uuid: String,
     version: String,
     ext: String,
@@ -50,7 +50,7 @@ export default {
       // 监听输出端变化， 有新的变化就通知编辑器刷新链接
       handler (nV, oV) {
         this.$emit('on-comp-output-change', {
-          index: this.index,
+          index: this.guid,
           value: nV
         })
       },
@@ -60,7 +60,7 @@ export default {
       // 监听输入变化， 有新的变化就通知编辑器刷新链接
       handler (nV, oV) {
         this.$emit('on-comp-input-change', {
-          index: this.index,
+          index: this.guid,
           value: nV
         })
       },
@@ -70,7 +70,7 @@ export default {
       // 监听表格变化， 有新的变化就通知编辑器刷新链接
       handler (nV, oV) {
         this.$emit('on-comp-table-change', {
-          index: this.index,
+          index: this.guid,
           value: nV
         })
       },
@@ -80,7 +80,7 @@ export default {
   methods: {
     onNodeClickR (args) {
       this.$emit('node-click-r', {
-        g: this.index,
+        g: this.guid,
         n: args.index,
         io: args.io
       })
@@ -89,14 +89,14 @@ export default {
       e.preventDefault()
       e.stopPropagation()
       this.$emit('task-click-r', {
-        g: this.index,
+        g: this.guid,
         io: io
       })
     },
     onMouseDn (e) {
       e.stopPropagation()
       this.$emit('on-comp-mouse-dn', {
-        i: this.index,
+        g: this.guid,
         pos: { x: e.pageX, y: e.pageY },
         offset: { x: e.offsetX, y: e.offsetY }
       })
@@ -108,14 +108,14 @@ export default {
     onNodeMouseDn (args) {
       this.$emit('node-mouse-dn', {
         pos: args.pos,
-        g: this.index,
+        g: this.guid,
         n: args.index,
         io: args.io
       })
     },
     onNodeMouseUp (args) {
       this.$emit('node-mouse-up', {
-        g: this.index,
+        g: this.guid,
         n: args.index,
         io: args.io
       })
@@ -124,26 +124,26 @@ export default {
       e.stopPropagation()
       this.$emit('task-in-dn', {
         pos: { x: e.pageX, y: e.pageY },
-        g: this.index
+        g: this.guid
       })
     },
     onTaskInUp (e) {
       e.stopPropagation()
       this.$emit('task-in-up', {
-        g: this.index
+        g: this.guid
       })
     },
     onTaskOutDn (e) {
       e.stopPropagation()
       this.$emit('task-out-dn', {
         pos: { x: e.pageX, y: e.pageY },
-        g: this.index
+        g: this.guid
       })
     },
     onTaskOutUp (e) {
       e.stopPropagation()
       this.$emit('task-out-up', {
-        g: this.index
+        g: this.guid
       })
     }
   }
