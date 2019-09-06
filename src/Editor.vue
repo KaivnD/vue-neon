@@ -126,6 +126,7 @@ export default {
           el.guid = uuid.v1()
         }
       })
+      this.$emit('on-gens-change', nv)
     }
   },
   mounted () {
