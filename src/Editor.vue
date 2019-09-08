@@ -230,7 +230,7 @@ export default {
     },
     onNodeClickR (args) {
       this.getGen(args.g)[args.io][args.n].connection.forEach(c => {
-        this.gens[c.g][c.io][c.n].connection = []
+        this.getGen(c.g)[c.io][c.n].connection = []
       })
       this.getGen(args.g)[args.io][args.n].connection = []
       this.updateConnection()
@@ -238,10 +238,10 @@ export default {
     onTaskClickR (args) {
       const io = this.getGen(args.g).task[args.io]
       if (args.io === 'in') {
-        this.gens[io].task.out = null
+        this.getGen(io).task.out = null
         this.getGen(args.g).task.in = null
       } else {
-        this.gens[io].task.in = null
+        this.getGen(io).task.in = null
         this.getGen(args.g).task.out = null
       }
       this.updateConnection()
