@@ -3,7 +3,7 @@
     ref="neon-warpper"
     class="neon-warpper"
     :class="{hand: isPan}"
-    :style="`height: ${height}; width: ${width}`"
+    :style="`height: ${height}; width: ${width}; background-color: ${dark ? theme.dark : theme.light};`"
     @mousedown.right="onEditorMouseDown($event)"
     @mousemove="onEditorMouseMove($event)"
     @mouseup="onEditorMouseUp($event)"
@@ -88,6 +88,19 @@ import uuid from 'uuid'
 export default {
   name: 'n-editor',
   props: {
+    dark: {
+      type: Boolean,
+      default: true
+    },
+    theme: {
+      type: Object,
+      default () {
+        return {
+          dark: '#303030',
+          light: '#fff'
+        }
+      }
+    },
     width: String,
     height: String,
     sensitive: Number,
@@ -473,7 +486,6 @@ export default {
 
 .neon-warpper {
   display: block;
-  background-color: #303030;
   position: relative;
   overflow: hidden;
 
