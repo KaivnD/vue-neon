@@ -16,65 +16,67 @@
       :style="`transform: translate(${this.transform.x}px, ${this.transform.y}px) scale(${this.transform.z});transform-origin:0 0;`"
     >
       <Grid />
-      <div style="position: absolute; z-index: -1;">
-        <svg class="connection">
-          <path
-            v-if="ghostWrie !== null"
-            :d="`M${ghostWrie.s.x},${ghostWrie.s.y}C${ghostWrie.s.x + 66},
+      <div v-if="gens != null">
+        <div style="position: absolute; z-index: -1;">
+          <svg class="connection">
+            <path
+              v-if="ghostWrie !== null"
+              :d="`M${ghostWrie.s.x},${ghostWrie.s.y}C${ghostWrie.s.x + 66},
             ${ghostWrie.s.y},${ghostWrie.e.x - 66},
             ${ghostWrie.e.y},${ghostWrie.e.x},${ghostWrie.e.y}`"
-            stroke-width="2"
-            stroke="#fff"
-            fill="none"
-            stroke-miterlimit="10"
-          />
-          <Connection
-            v-for="(item, index) in wires"
-            :key="`cn_${index}`"
-            :index="index"
-            :task="item.t"
-            :dash="item.d"
-            :width="item.w"
-            :color="item.c"
-            :start="item.s"
-            :end="item.e"
-            :value="item.v"
-            :type="item.tp"
-            @on-conn-value-change="onConnValueChange"
-          />
-        </svg>
+              stroke-width="2"
+              stroke="#fff"
+              fill="none"
+              stroke-miterlimit="10"
+            />
+            <Connection
+              v-for="(item, index) in wires"
+              :key="`cn_${index}`"
+              :index="index"
+              :task="item.t"
+              :dash="item.d"
+              :width="item.w"
+              :color="item.c"
+              :start="item.s"
+              :end="item.e"
+              :value="item.v"
+              :type="item.tp"
+              @on-conn-value-change="onConnValueChange"
+            />
+          </svg>
+        </div>
+        <component
+          ref="comps"
+          v-for="gen in gens"
+          :key="gen.guid"
+          :guid="gen.guid"
+          :is="gen.component"
+          :name="gen.name"
+          :pos="gen.pos"
+          :task="gen.task"
+          :input="gen.input"
+          :output="gen.output"
+          :platform="gen.platform"
+          :uuid="gen.uuid"
+          :ext="gen.file_ext"
+          :table="gen.table"
+          :version="gen.version"
+          :options="gen.options"
+          @on-comp-mouse-dn="onCompMouseDn"
+          @on-comp-mouse-up="onCompMouseUp"
+          @node-mouse-dn="onNodeMouseDn"
+          @node-mouse-up="onNodeMouseUp"
+          @task-in-up="onTaskInUp"
+          @task-out-dn="onTaskOutDn"
+          @task-click-r="onTaskClickR"
+          @node-click-r="onNodeClickR"
+          @comp-click-db="onCompClickDB"
+          @menu-item-click="onMenuItemClick"
+          @on-comp-output-change="onCompOutputChange"
+          @on-comp-input-change="onCompInputChange"
+          @on-comp-table-change="onCompTableChange"
+        />
       </div>
-      <component
-        ref="comps"
-        v-for="gen in gens"
-        :key="gen.guid"
-        :guid="gen.guid"
-        :is="gen.component"
-        :name="gen.name"
-        :pos="gen.pos"
-        :task="gen.task"
-        :input="gen.input"
-        :output="gen.output"
-        :platform="gen.platform"
-        :uuid="gen.uuid"
-        :ext="gen.file_ext"
-        :table="gen.table"
-        :version="gen.version"
-        :options="gen.options"
-        @on-comp-mouse-dn="onCompMouseDn"
-        @on-comp-mouse-up="onCompMouseUp"
-        @node-mouse-dn="onNodeMouseDn"
-        @node-mouse-up="onNodeMouseUp"
-        @task-in-up="onTaskInUp"
-        @task-out-dn="onTaskOutDn"
-        @task-click-r="onTaskClickR"
-        @node-click-r="onNodeClickR"
-        @comp-click-db="onCompClickDB"
-        @menu-item-click="onMenuItemClick"
-        @on-comp-output-change="onCompOutputChange"
-        @on-comp-input-change="onCompInputChange"
-        @on-comp-table-change="onCompTableChange"
-      />
       <slot />
     </div>
   </div>
@@ -134,6 +136,7 @@ export default {
       this.updateConnection()
     },
     gens: function (nv) {
+      if (this.gens === null || this.gens === undefined) return
       this.gens.forEach(el => {
         if (el.guid === undefined) {
           el.guid = uuid.v1()
@@ -385,41 +388,51 @@ export default {
     },
     updateConnection () {
       this.wires = []
-      if (this.gens !== null || this.gens !== undefined) {
-        this.gens.forEach(gen => {
-          if (gen.task !== undefined) {
-            if (gen.task.in !== null) {
-              this.wires.push({
-                t: true,
-                d: true,
-                w: 6,
-                c: '#141414',
-                s: { g: gen.task.in, comp: this.getComp(gen.task.in) },
-                e: { g: gen.guid, comp: this.getComp(gen.guid) }
-              })
-            }
-          }
-          if (gen.input !== undefined) {
-            gen.input.forEach((input, j) => {
-              if (input.connection.length !== 0) {
-                input.connection.forEach(cn => {
-                  const output = this.getComp(cn.g).output[cn.n]
-                  this.wires.push({
-                    t: false,
-                    d: false,
-                    w: 2,
-                    c: '#eee',
-                    s: Object.assign({ comp: this.getComp(cn.g) }, cn),
-                    e: { g: gen.guid, n: j, io: 'input', comp: this.getComp(gen.guid) },
-                    v: output.value || null,
-                    tp: output.type || null
-                  })
-                })
-              }
+      if (
+        this.gens === null ||
+        this.gens === undefined ||
+        !(this.gens instanceof Array)
+      ) {
+        return
+      }
+      this.gens.forEach(gen => {
+        if (gen.task !== undefined) {
+          if (gen.task.in !== null) {
+            this.wires.push({
+              t: true,
+              d: true,
+              w: 6,
+              c: '#141414',
+              s: { g: gen.task.in, comp: this.getComp(gen.task.in) },
+              e: { g: gen.guid, comp: this.getComp(gen.guid) }
             })
           }
-        })
-      }
+        }
+        if (gen.input !== undefined) {
+          gen.input.forEach((input, j) => {
+            if (input.connection.length !== 0) {
+              input.connection.forEach(cn => {
+                const output = this.getComp(cn.g).output[cn.n]
+                this.wires.push({
+                  t: false,
+                  d: false,
+                  w: 2,
+                  c: '#eee',
+                  s: Object.assign({ comp: this.getComp(cn.g) }, cn),
+                  e: {
+                    g: gen.guid,
+                    n: j,
+                    io: 'input',
+                    comp: this.getComp(gen.guid)
+                  },
+                  v: output.value || null,
+                  tp: output.type || null
+                })
+              })
+            }
+          })
+        }
+      })
     },
     removeConnection (gen) {
       this.wries = []
