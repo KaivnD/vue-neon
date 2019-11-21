@@ -58,7 +58,7 @@
           :output="gen.output"
           :platform="gen.platform"
           :uuid="gen.uuid"
-          :ext="gen.file_ext"
+          :ext="gen.ext"
           :table="gen.table"
           :version="gen.version"
           :options="gen.options"
