@@ -22,8 +22,9 @@ export default {
   computed: {
     taskInColor: {
       get: function () {
-        return (this.task.in === undefined || this.task.in === null)
-          ? 'white' : '#EE7434'
+        return this.task.in === undefined || this.task.in === null
+          ? 'white'
+          : '#EE7434'
       },
       set: function (nv) {
         return nv
@@ -31,8 +32,9 @@ export default {
     },
     taskOutColor: {
       get: function () {
-        return (this.task.out === undefined || this.task.out === null)
-          ? 'white' : '#EE7434'
+        return this.task.out === undefined || this.task.out === null
+          ? 'white'
+          : '#EE7434'
       },
       set: function (nv) {
         return nv
@@ -61,7 +63,7 @@ export default {
       handler (nV, oV) {
         this.$emit('on-comp-input-change', {
           index: this.guid,
-          value: nV
+          value: this.getArrDifference(nV, oV)
         })
       },
       deep: true
@@ -71,13 +73,18 @@ export default {
       handler (nV, oV) {
         this.$emit('on-comp-table-change', {
           index: this.guid,
-          value: nV
+          value: this.getArrDifference(nV, oV)
         })
       },
       deep: true
     }
   },
   methods: {
+    getArrDifference (arr1, arr2) {
+      return arr1
+        .concat(arr2)
+        .filter((v, i, arr) => arr.indexOf(v) === arr.lastIndexOf(v))
+    },
     onNodeClickR (args) {
       this.$emit('node-click-r', {
         g: this.guid,

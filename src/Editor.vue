@@ -124,18 +124,19 @@ export default {
       dragCompOffset: null,
       pointerStart: [],
       startPosition: {},
-      transform: this.state
+      transform: this.state,
+      refreshCnt: 0
     }
   },
   created () {
     this.gens = this.generators
   },
   watch: {
-    generators: function (nV, oV) {
+    generators (nV, oV) {
       this.gens = nV
       this.updateConnection()
     },
-    gens: function (nv) {
+    gens (nv) {
       if (this.gens === null || this.gens === undefined) return
       this.gens.forEach(el => {
         if (el.guid === undefined) {
@@ -151,11 +152,11 @@ export default {
   },
   // 不能使用 update钩子， 一旦使用就会卡死
   methods: {
+    refresh () {
+      ++this.refreshCnt
+    },
     bindKey (e) {
-      if (e.ctrlKey && e.keyCode === 83) {
-        // Ctrl + S 保存功能
-        this.$emit('ctrl-s', this.gens)
-      } else if (e.keyCode === 46) {
+      if (e.keyCode === 46) {
         // TO DO 删除功能
         if (this.$refs.comps !== undefined) {
           const index = this.$refs.comps.findIndex(el => el.selected === true)
@@ -168,12 +169,6 @@ export default {
           this.ghostWrie = null
           this.isDrag = ''
         }
-      } else if (e.keyCode === 192) {
-        this.$emit('backquote')
-      } else if (e.keyCode === 116) {
-        this.$emit('F5')
-      } else if (e.keyCode === 112) {
-        this.$emit('F1')
       }
     },
     onEditorCtxMenu (e) {

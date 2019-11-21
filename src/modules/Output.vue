@@ -3,10 +3,10 @@
     <div class="outputTitle">
       {{name}}
       <span
-      :style="`--node-stat: ${color}`"
-      @click.right="onMouseClickR"
-      @mousedown.stop="onMouseDn"
-      @mouseup.stop="onMouseUp"
+        :style="`--node-stat: ${color}`"
+        @click.right="onMouseClickR"
+        @mousedown.stop="onMouseDn"
+        @mouseup.stop="onMouseUp"
       ></span>
     </div>
   </div>
@@ -18,11 +18,12 @@ export default {
     index: Number,
     name: String,
     type: Number,
+    value: String,
     connection: Array
   },
   computed: {
     color () {
-      return (this.connection.length === 0) ? 'white' : '#EE7434'
+      return this.connection.length === 0 ? 'white' : '#EE7434'
     }
   },
   methods: {
