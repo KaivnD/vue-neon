@@ -134,6 +134,7 @@ export default {
   watch: {
     generators (nV, oV) {
       this.gens = nV
+      if (!this.$refs.comps) return
       this.updateConnection()
     },
     gens (nv) {

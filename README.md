@@ -1,6 +1,6 @@
 # VueNeon
 
-[![npm](https://img.shields.io/npm/v/vue-neon.svg)](https://www.npmjs.com/package/vue-neon) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
+[![npm](https://img.shields.io/npm/v/vue-neon.svg)](https://www.npmjs.com/package/vue-neon) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/) [![travis](https://api.travis-ci.org/KaivnD/vue-neon.svg?branch=master)](https://www.travis-ci.org/KaivnD/vue-neon)
 
 > Node Interface for Noah project
 
