@@ -1,8 +1,13 @@
 <template>
-    <path :d="`M${s.x},${s.y}C${s.x + 66},${s.y},${e.x - 66},${e.y},${e.x},${e.y}`"
+  <path
+    :d="`M${s.x},${s.y}C${s.x + 66},${s.y},${e.x - 66},${e.y},${e.x},${e.y}`"
     :stroke-dasharray="dash ? '1, 10' : '0'"
     stroke-linecap="round"
-    :stroke="color" fill="none" :stroke-width="width" stroke-miterlimit="10"/>
+    :stroke="color"
+    fill="none"
+    :stroke-width="width"
+    stroke-miterlimit="10"
+  />
 </template>
 
 <script>
@@ -30,10 +35,14 @@ export default {
   },
   computed: {
     s: function () {
-      return this.task ? this.getTaskPos(this.start, 'out') : this.getNodePos(this.start)
+      return this.task
+        ? this.getTaskPos(this.start, 'out')
+        : this.getNodePos(this.start)
     },
     e: function () {
-      return this.task ? this.getTaskPos(this.end, 'in') : this.getNodePos(this.end)
+      return this.task
+        ? this.getTaskPos(this.end, 'in')
+        : this.getNodePos(this.end)
     }
   },
   data: function () {
@@ -44,7 +53,8 @@ export default {
   methods: {
     getNodePos (args) {
       const comp = args.comp
-      const el = comp.$refs[args.io][args.n].$el
+      const node = comp.$refs[args.io][args.n]
+      const el = node.$el
       const pos = {
         x: comp.loc.x + el.offsetLeft + el.offsetWidth - 9.5,
         y: comp.loc.y + el.offsetTop + el.offsetHeight / 2 + 2
@@ -65,7 +75,7 @@ export default {
         x: comp.loc.x,
         y: comp.loc.y + el.offsetHeight
       }
-      return (io === 'in') ? pos2 : pos
+      return io === 'in' ? pos2 : pos
     }
   }
 }

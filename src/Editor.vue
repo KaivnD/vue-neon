@@ -384,84 +384,81 @@ export default {
     },
     updateConnection () {
       this.wires = []
-      if (
-        this.gens === null ||
-        this.gens === undefined ||
-        !(this.gens instanceof Array)
-      ) {
-        return
-      }
-      this.gens.forEach(gen => {
-        if (gen.task !== undefined) {
-          if (gen.task.in !== null) {
-            this.wires.push({
-              t: true,
-              d: true,
-              w: 6,
-              c: '#141414',
-              s: { g: gen.task.in, comp: this.getComp(gen.task.in) },
-              e: { g: gen.guid, comp: this.getComp(gen.guid) }
+      if (!this.gens || !(this.gens instanceof Array)) return
+
+      for (const gen of this.gens) {
+        if (gen.task && gen.task.in) {
+          this.wires.push({
+            t: true,
+            d: true,
+            w: 6,
+            c: '#141414',
+            s: { g: gen.task.in, comp: this.getComp(gen.task.in) },
+            e: { g: gen.guid, comp: this.getComp(gen.guid) }
+          })
+        }
+
+        if (!gen.input || !gen.output) continue
+
+        gen.input.forEach((input, j) => {
+          if (input.connection.length !== 0) {
+            input.connection.forEach(cn => {
+              const output = this.getComp(cn.g).output[cn.n]
+              if (!output) return
+              this.wires.push({
+                t: false,
+                d: false,
+                w: 2,
+                c: '#eee',
+                s: Object.assign({ comp: this.getComp(cn.g) }, cn),
+                e: {
+                  g: gen.guid,
+                  n: j,
+                  io: 'input',
+                  comp: this.getComp(gen.guid)
+                },
+                v: output.value || null,
+                tp: output.type || null
+              })
             })
           }
+        })
+      }
+    },
+    removeConnection (gen) {
+      this.wries = []
+      if (!gen) return
+      if (gen.task) {
+        if (gen.task.in !== null) {
+          this.getGen(gen.task.in).task.out = null
+          gen.task.in = null
         }
-        if (gen.input !== undefined) {
-          gen.input.forEach((input, j) => {
+        if (gen.task.out !== null) {
+          this.getGen(gen.task.out).task.in = null
+          gen.task.out = null
+        }
+      }
+      if (gen.input) {
+        if (gen.input instanceof Array) {
+          gen.input.forEach(input => {
             if (input.connection.length !== 0) {
               input.connection.forEach(cn => {
-                const output = this.getComp(cn.g).output[cn.n]
-                this.wires.push({
-                  t: false,
-                  d: false,
-                  w: 2,
-                  c: '#eee',
-                  s: Object.assign({ comp: this.getComp(cn.g) }, cn),
-                  e: {
-                    g: gen.guid,
-                    n: j,
-                    io: 'input',
-                    comp: this.getComp(gen.guid)
-                  },
-                  v: output.value || null,
-                  tp: output.type || null
-                })
+                this.getGen(cn.g).output[cn.n].connection = []
               })
             }
           })
         }
-      })
-    },
-    removeConnection (gen) {
-      this.wries = []
-      if (gen !== undefined) {
-        if (gen.task !== undefined) {
-          if (gen.task.in !== null) {
-            this.getGen(gen.task.in).task.out = null
-            gen.task.in = null
-          }
-          if (gen.task.out !== null) {
-            this.getGen(gen.task.out).task.in = null
-            gen.task.out = null
-          }
-        }
-        if (gen.input !== undefined && gen.output !== undefined) {
-          if (gen.input instanceof Array) {
-            gen.input.forEach(input => {
-              if (input.connection.length !== 0) {
-                input.connection.forEach(cn => {
-                  this.getGen(cn.g).output[cn.n].connection = []
-                })
-              }
-            })
-          }
-          if (gen.output instanceof Array) {
-            gen.output.forEach((output, j) => {
-              if (output.connection.length !== 0) {
-                output.connection.forEach(cn => {
-                  this.getGen(cn.g).input[cn.n].connection = []
-                })
-              }
-            })
-          }
+      }
+
+      if (gen.output) {
+        if (gen.output instanceof Array) {
+          gen.output.forEach((output, j) => {
+            if (output.connection.length !== 0) {
+              output.connection.forEach(cn => {
+                this.getGen(cn.g).input[cn.n].connection = []
+              })
+            }
+          })
         }
       }
     },
