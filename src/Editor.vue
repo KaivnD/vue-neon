@@ -1,9 +1,10 @@
 <template>
   <div
+    :key="refreshCnt"
     ref="neon-warpper"
     class="neon-warpper"
     :class="{hand: isPan}"
-    :style="`height: ${height}; width: ${width}; background-color: ${dark ? theme.dark : theme.light};`"
+    :style="`height: ${height}; width: ${width}; background-color: ${dark ? theme.background.dark : theme.background.light};`"
     @mousedown.right="onEditorMouseDown($event)"
     @mousemove="onEditorMouseMove($event)"
     @mouseup="onEditorMouseUp($event)"
@@ -25,7 +26,9 @@
             ${ghostWrie.s.y},${ghostWrie.e.x - 66},
             ${ghostWrie.e.y},${ghostWrie.e.x},${ghostWrie.e.y}`"
               stroke-width="2"
-              stroke="#fff"
+              :stroke="this.dark
+                  ? this.theme.connection.dark
+                  : this.theme.connection.light"
               fill="none"
               stroke-miterlimit="10"
             />
@@ -98,8 +101,18 @@ export default {
       type: Object,
       default () {
         return {
-          dark: '#303030',
-          light: '#fff'
+          background: {
+            dark: '#303030',
+            light: '#fff'
+          },
+          connection: {
+            dark: '#eee',
+            light: '#333'
+          },
+          task: {
+            light: '#999',
+            dark: '#141414'
+          }
         }
       }
     },
@@ -392,7 +405,7 @@ export default {
             t: true,
             d: true,
             w: 6,
-            c: '#141414',
+            c: this.dark ? this.theme.task.dark : this.theme.task.light,
             s: { g: gen.task.in, comp: this.getComp(gen.task.in) },
             e: { g: gen.guid, comp: this.getComp(gen.guid) }
           })
@@ -409,7 +422,9 @@ export default {
                 t: false,
                 d: false,
                 w: 2,
-                c: '#eee',
+                c: this.dark
+                  ? this.theme.connection.dark
+                  : this.theme.connection.light,
                 s: Object.assign({ comp: this.getComp(cn.g) }, cn),
                 e: {
                   g: gen.guid,
