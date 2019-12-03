@@ -444,11 +444,11 @@ export default {
       this.wries = []
       if (!gen) return
       if (gen.task) {
-        if (gen.task.in !== null) {
+        if (gen.task.in) {
           this.getGen(gen.task.in).task.out = null
           gen.task.in = null
         }
-        if (gen.task.out !== null) {
+        if (gen.task.out) {
           this.getGen(gen.task.out).task.in = null
           gen.task.out = null
         }
