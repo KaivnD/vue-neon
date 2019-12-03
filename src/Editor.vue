@@ -75,6 +75,7 @@
           @node-click-r="onNodeClickR"
           @comp-click-db="onCompClickDB"
           @menu-item-click="onMenuItemClick"
+          @on-rand-generated="onRandGen"
           @on-comp-output-change="onCompOutputChange"
           @on-comp-input-change="onCompInputChange"
           @on-comp-table-change="onCompTableChange"
@@ -479,6 +480,9 @@ export default {
     },
     onMenuItemClick (args) {
       this.$emit('menu-item-click', args)
+    },
+    onRandGen (args) {
+      this.$emit('on-rand-generated', args)
     },
     onResize (args) {
       this.updateConnection()
