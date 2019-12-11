@@ -175,6 +175,7 @@ export default {
         // TO DO 删除功能
         if (this.$refs.comps !== undefined) {
           const index = this.$refs.comps.findIndex(el => el.selected === true)
+          if (index < 0) return
           this.removeConnection(this.gens[index])
           this.gens = this.gens.splice(index, 1)
           this.updateConnection()
